@@ -34,15 +34,25 @@ void SmoothL1LossLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       bottom[1]->gpu_data(),
       diff_.mutable_gpu_data());    // d := b0 - b1
   if (has_weights_) {
+    // apply "inside" weights
     caffe_gpu_mul(
         count,
         bottom[2]->gpu_data(),
         diff_.gpu_data(),
-        diff_.mutable_gpu_data());  // d := w * (b0 - b1)
+        diff_.mutable_gpu_data());  // d := w_in * (b0 - b1)
   }
   SmoothL1Forward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
       count, diff_.gpu_data(), errors_.mutable_gpu_data());
   CUDA_POST_KERNEL_CHECK;
+
+  if (has_weights_) {
+    // apply "inside" weights
+    caffe_gpu_mul(
+        count,
+        bottom[3]->gpu_data(),
+        errors_.gpu_data(),
+        errors_.mutable_gpu_data());  // d := w_out * SmoothL1(w_in * (b0 - b1))
+  }
 
   Dtype loss;
   caffe_gpu_asum(count, errors_.gpu_data(), &loss);
@@ -76,11 +86,18 @@ void SmoothL1LossLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
       const Dtype sign = (i == 0) ? 1 : -1;
       const Dtype alpha = sign * top[0]->cpu_diff()[0] / bottom[i]->num();
       caffe_gpu_axpby(
-          bottom[i]->count(),              // count
+          count,                           // count
           alpha,                           // alpha
           diff_.gpu_data(),                // x
           Dtype(0),                        // beta
           bottom[i]->mutable_gpu_diff());  // y
+      if (has_weights_) {
+        caffe_gpu_mul(
+            count,
+            bottom[3]->gpu_data(),
+            bottom[i]->gpu_diff(),
+            bottom[i]->mutable_gpu_diff());
+      }
     }
   }
 }
