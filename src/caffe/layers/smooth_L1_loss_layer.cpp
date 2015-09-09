@@ -12,6 +12,8 @@ namespace caffe {
 template <typename Dtype>
 void SmoothL1LossLayer<Dtype>::LayerSetUp(
   const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+  SmoothL1LossParameter loss_param = this->layer_param_.smooth_l1_loss_param();
+  sigma2_ = loss_param.sigma() * loss_param.sigma();
   has_weights_ = (bottom.size() >= 3);
   if (has_weights_) {
     CHECK_EQ(bottom.size(), 4) << "If weights are used, must specify both "

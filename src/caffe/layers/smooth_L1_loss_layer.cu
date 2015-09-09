@@ -10,16 +10,17 @@
 namespace caffe {
 
 template <typename Dtype>
-__global__ void SmoothL1Forward(const int n, const Dtype* in, Dtype* out) {
-  // f(x) = 0.5 * x^2    if |x| < 1
-  //        |x| - 0.5    otherwise
+__global__ void SmoothL1Forward(const int n, const Dtype* in, Dtype* out,
+    Dtype sigma2) {
+  // f(x) = 0.5 * (sigma * x)^2          if |x| < 1 / sigma / sigma
+  //        |x| - 0.5 / sigma / sigma    otherwise
   CUDA_KERNEL_LOOP(index, n) {
     Dtype val = in[index];
     Dtype abs_val = abs(val);
-    if (abs_val < 1) {
-      out[index] = 0.5 * val * val;
+    if (abs_val < 1.0 / sigma2) {
+      out[index] = 0.5 * val * val * sigma2;
     } else {
-      out[index] = abs_val - 0.5;
+      out[index] = abs_val - 0.5 / sigma2;
     }
   }
 }
@@ -42,7 +43,7 @@ void SmoothL1LossLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         diff_.mutable_gpu_data());  // d := w_in * (b0 - b1)
   }
   SmoothL1Forward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
-      count, diff_.gpu_data(), errors_.mutable_gpu_data());
+      count, diff_.gpu_data(), errors_.mutable_gpu_data(), sigma2_);
   CUDA_POST_KERNEL_CHECK;
 
   if (has_weights_) {
@@ -60,14 +61,15 @@ void SmoothL1LossLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 }
 
 template <typename Dtype>
-__global__ void SmoothL1Backward(const int n, const Dtype* in, Dtype* out) {
-  // f'(x) = x         if |x| < 1
-  //       = sign(x)   otherwise
+__global__ void SmoothL1Backward(const int n, const Dtype* in, Dtype* out,
+    Dtype sigma2) {
+  // f'(x) = sigma * sigma * x         if |x| < 1 / sigma / sigma
+  //       = sign(x)                   otherwise
   CUDA_KERNEL_LOOP(index, n) {
     Dtype val = in[index];
     Dtype abs_val = abs(val);
-    if (abs_val < 1) {
-      out[index] = val;
+    if (abs_val < 1.0 / sigma2) {
+      out[index] = sigma2 * val;
     } else {
       out[index] = (Dtype(0) < val) - (val < Dtype(0));
     }
@@ -79,7 +81,7 @@ void SmoothL1LossLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
   int count = diff_.count();
   SmoothL1Backward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
-      count, diff_.gpu_data(), diff_.mutable_gpu_data());
+      count, diff_.gpu_data(), diff_.mutable_gpu_data(), sigma2_);
   CUDA_POST_KERNEL_CHECK;
   for (int i = 0; i < 2; ++i) {
     if (propagate_down[i]) {
