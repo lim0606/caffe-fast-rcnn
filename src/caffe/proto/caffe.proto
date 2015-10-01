@@ -378,6 +378,7 @@ message LayerParameter {
   optional ReLUParameter relu_param = 123;
   optional ReshapeParameter reshape_param = 133;
   optional ROIPoolingParameter roi_pooling_param = 8266711;
+    optional OCROIPoolingParameter oc_roi_pooling_param = 8266713;
   optional SigmoidParameter sigmoid_param = 124;
   optional SmoothL1LossParameter smooth_l1_loss_param = 8266712;
   optional SoftmaxParameter softmax_param = 125;
@@ -888,6 +889,19 @@ message ROIPoolingParameter {
   // Multiplicative spatial scale factor to translate ROI coords from their
   // input scale to the scale used when pooling
   optional float spatial_scale = 3 [default = 1];
+}
+
+// Message that stores parameters used by OCROIPoolingLayer
+message OCROIPoolingParameter {
+  // Pad, kernel size, and stride are all given as a single value for equal
+  // dimensions in height and width or as Y, X pairs.
+  optional uint32 pooled_h = 1 [default = 0]; // The pooled output height
+  optional uint32 pooled_w = 2 [default = 0]; // The pooled output width
+  optional uint32 margin_h = 3 [default = 0]; // margin
+  optional uint32 margin_w = 4 [default = 0]; // margin
+  // Multiplicative spatial scale factor to translate ROI coords from their
+  // input scale to the scale used when pooling
+  optional float spatial_scale = 5 [default = 1];
 }
 
 message SigmoidParameter {
