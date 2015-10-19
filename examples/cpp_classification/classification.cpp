@@ -200,7 +200,7 @@ void Classifier::Preprocess(const cv::Mat& img,
 
   cv::Mat sample_resized;
   if (sample.size() != input_geometry_)
-    cv::resize(sample, sample_resized, input_geometry_);
+    cv::resize(sample, sample_resized, input_geometry_, 0, 0, cv::INTER_CUBIC);
   else
     sample_resized = sample;
 

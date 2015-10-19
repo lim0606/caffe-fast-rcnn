@@ -387,7 +387,7 @@ void WindowDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       cv::Rect roi(x1, y1, x2-x1+1, y2-y1+1);
       cv::Mat cv_cropped_img = cv_img(roi);
       cv::resize(cv_cropped_img, cv_cropped_img,
-          cv_crop_size, 0, 0, cv::INTER_LINEAR);
+          cv_crop_size, 0, 0, /*cv::INTER_LINEAR*/cv::INTER_CUBIC);
 
       // horizontal flip at random
       if (do_mirror) {

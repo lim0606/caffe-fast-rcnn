@@ -1,3 +1,4 @@
+# GoogleNet
 name: "GoogleNet"
 layer {
   name: "data"
