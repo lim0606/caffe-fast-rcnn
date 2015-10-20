@@ -8,6 +8,8 @@
 #include "caffe/data_reader.hpp"
 #include "caffe/proto/caffe.pb.h"
 
+#include "caffe/util/math_functions.hpp"
+
 namespace caffe {
 
 using boost::weak_ptr;
@@ -108,8 +110,17 @@ void DataReader::Body::read_one(db::Cursor* cursor, QueuePair* qp) {
   datum->ParseFromString(cursor->value());
   qp->full_.push(datum);
 
-  // go to the next iter
-  cursor->Next();
+  if (param_.data_param().shuffle()) { // shuffle
+    // Do shuffle!! randomly skipping data, pretending the batch to contain nearly random accessed data
+    unsigned int skip = caffe_rng_rand() % (param_.data_param().batch_size() * 5/*10*/); //caffe_rng_rand() % dataset_->size();
+    while (skip-- > 0) {
+      cursor->Next();
+    }
+  }
+  else { // basic reading w/o shuffle
+    // go to the next iter
+    cursor->Next();
+  }
   if (!cursor->valid()) {
     DLOG(INFO) << "Restarting data prefetching from start.";
     cursor->SeekToFirst();

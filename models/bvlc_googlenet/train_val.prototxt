@@ -16,7 +16,7 @@ layer {
     mean_value: 123
   }
   data_param {
-    source: "examples/imagenet/ilsvrc12_train_lmdb"
+    source: "/home/nvidia/data/ilsvrc12/ilsvrc12_train_lmdb"
     batch_size: 32
     backend: LMDB
   }
@@ -37,7 +37,7 @@ layer {
     mean_value: 123
   }
   data_param {
-    source: "examples/imagenet/ilsvrc12_val_lmdb"
+    source: "/home/nvidia/data/ilsvrc12/ilsvrc12_val_lmdb"
     batch_size: 50
     backend: LMDB
   }

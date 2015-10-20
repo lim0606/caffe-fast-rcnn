@@ -1,7 +1,7 @@
 # Inception Network (GoogLeNet variant) Batch Normalization
 name: "InceptionNetwork_bn"
 ### Training Set
-layers {
+layer {
   top: "data"
   top: "label"
   name: "data"
@@ -10,7 +10,7 @@ layers {
     source: "/home/nvidia/data/ilsvrc12/ilsvrc12_train_lmdb"
     batch_size: 32
     backend: LMDB
-    #shuffle: true
+    shuffle: true
   }
   include {
     phase: TRAIN
@@ -25,7 +25,7 @@ layers {
   }
 }
 ### Validation Set
-layers {
+layer {
   top: "data"
   top: "label"
   name: "data"
@@ -44,7 +44,7 @@ layers {
     mean_file: "/home/nvidia/data/ilsvrc12/imagenet_mean.binaryproto"
   }
 }
-layers {
+layer {
   bottom: "data"
   top: "conv1/7x7_s2"
   name: "conv1/7x7_s2"
@@ -65,7 +65,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "conv1/7x7_s2"
   name: "conv1/7x7_s2/bn"
   top: "conv1/7x7_s2/bn"
@@ -89,13 +89,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "conv1/7x7_s2/bn"
   top: "conv1/7x7_s2/bn"
   name: "conv1/relu_7x7"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "conv1/7x7_s2/bn"
   top: "pool1/3x3_s2"
   name: "pool1/3x3_s2"
@@ -106,7 +106,7 @@ layers {
     stride: 2
   }
 }
-layers {
+layer {
   bottom: "pool1/3x3_s2"
   top: "conv2/3x3_reduce"
   name: "conv2/3x3_reduce"
@@ -125,7 +125,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "conv2/3x3_reduce"
   name: "conv2/3x3_reduce/bn"
   top: "conv2/3x3_reduce/bn"
@@ -149,13 +149,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "conv2/3x3_reduce/bn"
   top: "conv2/3x3_reduce/bn"
   name: "conv2/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "conv2/3x3_reduce/bn"
   top: "conv2/3x3"
   name: "conv2/3x3"
@@ -175,7 +175,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "conv2/3x3"
   name: "conv2/3x3/bn"
   top: "conv2/3x3/bn"
@@ -199,13 +199,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "conv2/3x3/bn"
   top: "conv2/3x3/bn"
   name: "conv2/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "conv2/3x3/bn"
   top: "pool2/3x3_s2"
   name: "pool2/3x3_s2"
@@ -216,7 +216,7 @@ layers {
     stride: 2
   }
 }
-layers {
+layer {
   bottom: "pool2/3x3_s2"
   top: "inception_3a/1x1"
   name: "inception_3a/1x1"
@@ -235,7 +235,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/1x1"
   name: "inception_3a/1x1/bn"
   top: "inception_3a/1x1/bn"
@@ -259,13 +259,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/1x1/bn"
   top: "inception_3a/1x1/bn"
   name: "inception_3a/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "pool2/3x3_s2"
   top: "inception_3a/3x3_reduce"
   name: "inception_3a/3x3_reduce"
@@ -285,7 +285,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/3x3_reduce"
   name: "inception_3a/3x3_reduce/bn"
   top: "inception_3a/3x3_reduce/bn"
@@ -309,13 +309,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/3x3_reduce/bn"
   top: "inception_3a/3x3_reduce/bn"
   name: "inception_3a/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/3x3_reduce/bn"
   top: "inception_3a/3x3"
   name: "inception_3a/3x3"
@@ -336,7 +336,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/3x3"
   name: "inception_3a/3x3/bn"
   top: "inception_3a/3x3/bn"
@@ -360,13 +360,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/3x3/bn"
   top: "inception_3a/3x3/bn"
   name: "inception_3a/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "pool2/3x3_s2"
   top: "inception_3a/double3x3_reduce"
   name: "inception_3a/double3x3_reduce"
@@ -386,7 +386,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/double3x3_reduce"
   name: "inception_3a/double3x3_reduce/bn"
   top: "inception_3a/double3x3_reduce/bn"
@@ -410,13 +410,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/double3x3_reduce/bn"
   top: "inception_3a/double3x3_reduce/bn"
   name: "inception_3a/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/double3x3_reduce/bn"
   top: "inception_3a/double3x3a"
   name: "inception_3a/double3x3a"
@@ -437,7 +437,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/double3x3a"
   name: "inception_3a/double3x3a/bn"
   top: "inception_3a/double3x3a/bn"
@@ -461,13 +461,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/double3x3a/bn"
   top: "inception_3a/double3x3a/bn"
   name: "inception_3a/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/double3x3a/bn"
   top: "inception_3a/double3x3b"
   name: "inception_3a/double3x3b"
@@ -488,7 +488,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/double3x3b"
   name: "inception_3a/double3x3b/bn"
   top: "inception_3a/double3x3b/bn"
@@ -512,13 +512,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/double3x3b/bn"
   top: "inception_3a/double3x3b/bn"
   name: "inception_3a/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "pool2/3x3_s2"
   top: "inception_3a/pool"
   name: "inception_3a/pool"
@@ -531,7 +531,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_3a/pool"
   top: "inception_3a/pool_proj"
   name: "inception_3a/pool_proj"
@@ -550,7 +550,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3a/pool_proj"
   name: "inception_3a/pool_proj/bn"
   top: "inception_3a/pool_proj/bn"
@@ -574,13 +574,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3a/pool_proj/bn"
   top: "inception_3a/pool_proj/bn"
   name: "inception_3a/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/1x1/bn"
   bottom: "inception_3a/3x3/bn"
   bottom: "inception_3a/double3x3b/bn"
@@ -589,7 +589,7 @@ layers {
   name: "inception_3a/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_3a/output"
   top: "inception_3b/1x1"
   name: "inception_3b/1x1"
@@ -609,7 +609,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/1x1"
   name: "inception_3b/1x1/bn"
   top: "inception_3b/1x1/bn"
@@ -633,13 +633,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/1x1/bn"
   top: "inception_3b/1x1/bn"
   name: "inception_3b/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/output"
   top: "inception_3b/3x3_reduce"
   name: "inception_3b/3x3_reduce"
@@ -659,7 +659,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/3x3_reduce"
   name: "inception_3b/3x3_reduce/bn"
   top: "inception_3b/3x3_reduce/bn"
@@ -683,13 +683,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/3x3_reduce/bn"
   top: "inception_3b/3x3_reduce/bn"
   name: "inception_3b/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3b/3x3_reduce/bn"
   top: "inception_3b/3x3"
   name: "inception_3b/3x3"
@@ -710,7 +710,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/3x3"
   name: "inception_3b/3x3/bn"
   top: "inception_3b/3x3/bn"
@@ -734,13 +734,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/3x3/bn"
   top: "inception_3b/3x3/bn"
   name: "inception_3b/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/output"
   top: "inception_3b/double3x3_reduce"
   name: "inception_3b/double3x3_reduce"
@@ -760,7 +760,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/double3x3_reduce"
   name: "inception_3b/double3x3_reduce/bn"
   top: "inception_3b/double3x3_reduce/bn"
@@ -784,13 +784,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/double3x3_reduce/bn"
   top: "inception_3b/double3x3_reduce/bn"
   name: "inception_3b/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3b/double3x3_reduce/bn"
   top: "inception_3b/double3x3a"
   name: "inception_3b/double3x3a"
@@ -810,7 +810,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/double3x3a"
   name: "inception_3b/double3x3a/bn"
   top: "inception_3b/double3x3a/bn"
@@ -834,13 +834,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/double3x3a/bn"
   top: "inception_3b/double3x3a/bn"
   name: "inception_3b/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3b/double3x3a/bn"
   top: "inception_3b/double3x3b"
   name: "inception_3b/double3x3b"
@@ -860,7 +860,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/double3x3b"
   name: "inception_3b/double3x3b/bn"
   top: "inception_3b/double3x3b/bn"
@@ -884,13 +884,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/double3x3b/bn"
   top: "inception_3b/double3x3b/bn"
   name: "inception_3b/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3a/output"
   top: "inception_3b/pool"
   name: "inception_3b/pool"
@@ -903,7 +903,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_3b/pool"
   top: "inception_3b/pool_proj"
   name: "inception_3b/pool_proj"
@@ -922,7 +922,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3b/pool_proj"
   name: "inception_3b/pool_proj/bn"
   top: "inception_3b/pool_proj/bn"
@@ -946,13 +946,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3b/pool_proj/bn"
   top: "inception_3b/pool_proj/bn"
   name: "inception_3b/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3b/1x1/bn"
   bottom: "inception_3b/3x3/bn"
   bottom: "inception_3b/double3x3b/bn"
@@ -961,7 +961,7 @@ layers {
   name: "inception_3b/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_3b/output"
   top: "inception_3c/3x3_reduce"
   name: "inception_3c/3x3_reduce"
@@ -980,7 +980,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3c/3x3_reduce"
   name: "inception_3c/3x3_reduce/bn"
   top: "inception_3c/3x3_reduce/bn"
@@ -1004,13 +1004,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3c/3x3_reduce/bn"
   top: "inception_3c/3x3_reduce/bn"
   name: "inception_3c/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3c/3x3_reduce/bn"
   top: "inception_3c/3x3"
   name: "inception_3c/3x3"
@@ -1031,7 +1031,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3c/3x3"
   name: "inception_3c/3x3/bn"
   top: "inception_3c/3x3/bn"
@@ -1055,13 +1055,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3c/3x3/bn"
   top: "inception_3c/3x3/bn"
   name: "inception_3c/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3b/output"
   top: "inception_3c/double3x3_reduce"
   name: "inception_3c/double3x3_reduce"
@@ -1080,7 +1080,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3c/double3x3_reduce"
   name: "inception_3c/double3x3_reduce/bn"
   top: "inception_3c/double3x3_reduce/bn"
@@ -1104,13 +1104,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3c/double3x3_reduce/bn"
   top: "inception_3c/double3x3_reduce/bn"
   name: "inception_3c/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3c/double3x3_reduce/bn"
   top: "inception_3c/double3x3a"
   name: "inception_3c/double3x3a"
@@ -1130,7 +1130,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3c/double3x3a"
   name: "inception_3c/double3x3a/bn"
   top: "inception_3c/double3x3a/bn"
@@ -1154,13 +1154,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3c/double3x3a/bn"
   top: "inception_3c/double3x3a/bn"
   name: "inception_3c/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3c/double3x3a/bn"
   top: "inception_3c/double3x3b"
   name: "inception_3c/double3x3b"
@@ -1181,7 +1181,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_3c/double3x3b"
   name: "inception_3c/double3x3b/bn"
   top: "inception_3c/double3x3b/bn"
@@ -1205,13 +1205,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_3c/double3x3b/bn"
   top: "inception_3c/double3x3b/bn"
   name: "inception_3c/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3b/output"
   top: "inception_3c/pool/3x3_s2"
   name: "inception_3c/pool/3x3_s2"
@@ -1222,7 +1222,7 @@ layers {
     stride: 2
   }
 }
-layers {
+layer {
   bottom: "inception_3c/3x3/bn"
   bottom: "inception_3c/double3x3b/bn"
   bottom: "inception_3c/pool/3x3_s2"
@@ -1230,7 +1230,7 @@ layers {
   name: "inception_3c/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_3c/output"
   top: "inception_4a/1x1"
   name: "inception_4a/1x1"
@@ -1250,7 +1250,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/1x1"
   name: "inception_4a/1x1/bn"
   top: "inception_4a/1x1/bn"
@@ -1274,13 +1274,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/1x1/bn"
   top: "inception_4a/1x1/bn"
   name: "inception_4a/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3c/output"
   top: "inception_4a/3x3_reduce"
   name: "inception_4a/3x3_reduce"
@@ -1300,7 +1300,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/3x3_reduce"
   name: "inception_4a/3x3_reduce/bn"
   top: "inception_4a/3x3_reduce/bn"
@@ -1324,13 +1324,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/3x3_reduce/bn"
   top: "inception_4a/3x3_reduce/bn"
   name: "inception_4a/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/3x3_reduce/bn"
   top: "inception_4a/3x3"
   name: "inception_4a/3x3"
@@ -1351,7 +1351,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/3x3"
   name: "inception_4a/3x3/bn"
   top: "inception_4a/3x3/bn"
@@ -1375,13 +1375,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/3x3/bn"
   top: "inception_4a/3x3/bn"
   name: "inception_4a/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3c/output"
   top: "inception_4a/double3x3_reduce"
   name: "inception_4a/double3x3_reduce"
@@ -1401,7 +1401,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/double3x3_reduce"
   name: "inception_4a/double3x3_reduce/bn"
   top: "inception_4a/double3x3_reduce/bn"
@@ -1425,13 +1425,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/double3x3_reduce/bn"
   top: "inception_4a/double3x3_reduce/bn"
   name: "inception_4a/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/double3x3_reduce/bn"
   top: "inception_4a/double3x3a"
   name: "inception_4a/double3x3a"
@@ -1452,7 +1452,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/double3x3a"
   name: "inception_4a/double3x3a/bn"
   top: "inception_4a/double3x3a/bn"
@@ -1476,13 +1476,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/double3x3a/bn"
   top: "inception_4a/double3x3a/bn"
   name: "inception_4a/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/double3x3a/bn"
   top: "inception_4a/double3x3b"
   name: "inception_4a/double3x3b"
@@ -1502,7 +1502,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/double3x3b"
   name: "inception_4a/double3x3b/bn"
   top: "inception_4a/double3x3b/bn"
@@ -1526,13 +1526,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/double3x3b/bn"
   top: "inception_4a/double3x3b/bn"
   name: "inception_4a/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_3c/output"
   top: "inception_4a/pool"
   name: "inception_4a/pool"
@@ -1545,7 +1545,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_4a/pool"
   top: "inception_4a/pool_proj"
   name: "inception_4a/pool_proj"
@@ -1565,7 +1565,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4a/pool_proj"
   name: "inception_4a/pool_proj/bn"
   top: "inception_4a/pool_proj/bn"
@@ -1589,13 +1589,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4a/pool_proj/bn"
   top: "inception_4a/pool_proj/bn"
   name: "inception_4a/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/1x1/bn"
   bottom: "inception_4a/3x3/bn"
   bottom: "inception_4a/double3x3b/bn"
@@ -1604,7 +1604,7 @@ layers {
   name: "inception_4a/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_4a/output"
   top: "loss1/ave_pool"
   name: "loss1/ave_pool"
@@ -1615,7 +1615,7 @@ layers {
     stride: 3
   }
 }
-layers {
+layer {
   bottom: "loss1/ave_pool"
   top: "loss1/conv"
   name: "loss1/conv"
@@ -1634,7 +1634,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "loss1/conv"
   name: "loss1/conv/bn"
   top: "loss1/conv/bn"
@@ -1658,13 +1658,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "loss1/conv/bn"
   top: "loss1/conv/bn"
   name: "loss1/relu_conv"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "loss1/conv/bn"
   top: "loss1/fc"
   name: "loss1/fc"
@@ -1672,10 +1672,6 @@ layers {
   param {
     lr_mult: 1
     decay_mult: 1
-  }
-  param {
-    lr_mult: 2
-    decay_mult: 0
   }
   inner_product_param {
     num_output: 1024
@@ -1686,7 +1682,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "loss1/fc"
   name: "loss1/fc/bn"
   top: "loss1/fc/bn"
@@ -1710,13 +1706,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "loss1/fc/bn"
   top: "loss1/fc/bn"
   name: "loss1/relu_fc"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "loss1/fc/bn"
   top: "loss1/classifier"
   name: "loss1/classifier"
@@ -1736,10 +1732,11 @@ layers {
     }
     bias_filler {
       type: "constant"
+      value: 0
     }
   }
 }
-layers {
+layer {
   bottom: "loss1/classifier"
   bottom: "label"
   top: "loss1/loss1"
@@ -1747,7 +1744,7 @@ layers {
   type: "SoftmaxWithLoss"
   loss_weight: 0.3
 }
-layers {
+layer {
   bottom: "loss1/classifier"
   bottom: "label"
   top: "loss1/top-1"
@@ -1757,7 +1754,7 @@ layers {
     phase: TEST
   }
 }
-layers {
+layer {
   bottom: "loss1/classifier"
   bottom: "label"
   top: "loss1/top-5"
@@ -1770,7 +1767,7 @@ layers {
     phase: TEST
   }
 }
-layers {
+layer {
   bottom: "inception_4a/output"
   top: "inception_4b/1x1"
   name: "inception_4b/1x1"
@@ -1790,7 +1787,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/1x1"
   name: "inception_4b/1x1/bn"
   top: "inception_4b/1x1/bn"
@@ -1814,13 +1811,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/1x1/bn"
   top: "inception_4b/1x1/bn"
   name: "inception_4b/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/output"
   top: "inception_4b/3x3_reduce"
   name: "inception_4b/3x3_reduce"
@@ -1840,7 +1837,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/3x3_reduce"
   name: "inception_4b/3x3_reduce/bn"
   top: "inception_4b/3x3_reduce/bn"
@@ -1864,13 +1861,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/3x3_reduce/bn"
   top: "inception_4b/3x3_reduce/bn"
   name: "inception_4b/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/3x3_reduce/bn"
   top: "inception_4b/3x3"
   name: "inception_4b/3x3"
@@ -1891,7 +1888,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/3x3"
   name: "inception_4b/3x3/bn"
   top: "inception_4b/3x3/bn"
@@ -1915,13 +1912,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/3x3/bn"
   top: "inception_4b/3x3/bn"
   name: "inception_4b/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/output"
   top: "inception_4b/double3x3_reduce"
   name: "inception_4b/double3x3_reduce"
@@ -1941,7 +1938,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/double3x3_reduce"
   name: "inception_4b/double3x3_reduce/bn"
   top: "inception_4b/double3x3_reduce/bn"
@@ -1965,13 +1962,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/double3x3_reduce/bn"
   top: "inception_4b/double3x3_reduce/bn"
   name: "inception_4b/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/double3x3_reduce/bn"
   top: "inception_4b/double3x3a"
   name: "inception_4b/double3x3a"
@@ -1992,7 +1989,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/double3x3a"
   name: "inception_4b/double3x3a/bn"
   top: "inception_4b/double3x3a/bn"
@@ -2016,13 +2013,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/double3x3a/bn"
   top: "inception_4b/double3x3a/bn"
   name: "inception_4b/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/double3x3a/bn"
   top: "inception_4b/double3x3b"
   name: "inception_4b/double3x3b"
@@ -2042,7 +2039,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/double3x3b"
   name: "inception_4b/double3x3b/bn"
   top: "inception_4b/double3x3b/bn"
@@ -2066,13 +2063,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/double3x3b/bn"
   top: "inception_4b/double3x3b/bn"
   name: "inception_4b/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4a/output"
   top: "inception_4b/pool"
   name: "inception_4b/pool"
@@ -2085,7 +2082,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_4b/pool"
   top: "inception_4b/pool_proj"
   name: "inception_4b/pool_proj"
@@ -2104,7 +2101,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4b/pool_proj"
   name: "inception_4b/pool_proj/bn"
   top: "inception_4b/pool_proj/bn"
@@ -2128,13 +2125,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4b/pool_proj/bn"
   top: "inception_4b/pool_proj/bn"
   name: "inception_4b/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/1x1/bn"
   bottom: "inception_4b/3x3/bn"
   bottom: "inception_4b/double3x3b/bn"
@@ -2143,7 +2140,7 @@ layers {
   name: "inception_4b/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_4b/output"
   top: "inception_4c/1x1"
   name: "inception_4c/1x1"
@@ -2163,7 +2160,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/1x1"
   name: "inception_4c/1x1/bn"
   top: "inception_4c/1x1/bn"
@@ -2187,13 +2184,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/1x1/bn"
   top: "inception_4c/1x1/bn"
   name: "inception_4c/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/output"
   top: "inception_4c/3x3_reduce"
   name: "inception_4c/3x3_reduce"
@@ -2212,7 +2209,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/3x3_reduce"
   name: "inception_4c/3x3_reduce/bn"
   top: "inception_4c/3x3_reduce/bn"
@@ -2236,13 +2233,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/3x3_reduce/bn"
   top: "inception_4c/3x3_reduce/bn"
   name: "inception_4c/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/3x3_reduce/bn"
   top: "inception_4c/3x3"
   name: "inception_4c/3x3"
@@ -2262,7 +2259,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/3x3"
   name: "inception_4c/3x3/bn"
   top: "inception_4c/3x3/bn"
@@ -2286,13 +2283,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/3x3/bn"
   top: "inception_4c/3x3/bn"
   name: "inception_4c/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/output"
   top: "inception_4c/double3x3_reduce"
   name: "inception_4c/double3x3_reduce"
@@ -2312,7 +2309,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/double3x3_reduce"
   name: "inception_4c/double3x3_reduce/bn"
   top: "inception_4c/double3x3_reduce/bn"
@@ -2336,13 +2333,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/double3x3_reduce/bn"
   top: "inception_4c/double3x3_reduce/bn"
   name: "inception_4c/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/double3x3_reduce/bn"
   top: "inception_4c/double3x3a"
   name: "inception_4c/double3x3a"
@@ -2363,7 +2360,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/double3x3a"
   name: "inception_4c/double3x3a/bn"
   top: "inception_4c/double3x3a/bn"
@@ -2387,13 +2384,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/double3x3a/bn"
   top: "inception_4c/double3x3a/bn"
   name: "inception_4c/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/double3x3a/bn"
   top: "inception_4c/double3x3b"
   name: "inception_4c/double3x3b"
@@ -2413,7 +2410,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/double3x3b"
   name: "inception_4c/double3x3b/bn"
   top: "inception_4c/double3x3b/bn"
@@ -2437,13 +2434,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/double3x3b/bn"
   top: "inception_4c/double3x3b/bn"
   name: "inception_4c/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4b/output"
   top: "inception_4c/pool"
   name: "inception_4c/pool"
@@ -2456,7 +2453,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_4c/pool"
   top: "inception_4c/pool_proj"
   name: "inception_4c/pool_proj"
@@ -2476,7 +2473,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4c/pool_proj"
   name: "inception_4c/pool_proj/bn"
   top: "inception_4c/pool_proj/bn"
@@ -2500,13 +2497,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4c/pool_proj/bn"
   top: "inception_4c/pool_proj/bn"
   name: "inception_4c/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/1x1/bn"
   bottom: "inception_4c/3x3/bn"
   bottom: "inception_4c/double3x3b/bn"
@@ -2515,7 +2512,7 @@ layers {
   name: "inception_4c/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_4c/output"
   top: "inception_4d/1x1"
   name: "inception_4d/1x1"
@@ -2534,7 +2531,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/1x1"
   name: "inception_4d/1x1/bn"
   top: "inception_4d/1x1/bn"
@@ -2558,13 +2555,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/1x1/bn"
   top: "inception_4d/1x1/bn"
   name: "inception_4d/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/output"
   top: "inception_4d/3x3_reduce"
   name: "inception_4d/3x3_reduce"
@@ -2584,7 +2581,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/3x3_reduce"
   name: "inception_4d/3x3_reduce/bn"
   top: "inception_4d/3x3_reduce/bn"
@@ -2608,13 +2605,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/3x3_reduce/bn"
   top: "inception_4d/3x3_reduce/bn"
   name: "inception_4d/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4d/3x3_reduce/bn"
   top: "inception_4d/3x3"
   name: "inception_4d/3x3"
@@ -2635,7 +2632,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/3x3"
   name: "inception_4d/3x3/bn"
   top: "inception_4d/3x3/bn"
@@ -2659,13 +2656,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/3x3/bn"
   top: "inception_4d/3x3/bn"
   name: "inception_4d/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/output"
   top: "inception_4d/double3x3_reduce"
   name: "inception_4d/double3x3_reduce"
@@ -2685,7 +2682,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/double3x3_reduce"
   name: "inception_4d/double3x3_reduce/bn"
   top: "inception_4d/double3x3_reduce/bn"
@@ -2709,13 +2706,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/double3x3_reduce/bn"
   top: "inception_4d/double3x3_reduce/bn"
   name: "inception_4d/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4d/double3x3_reduce/bn"
   top: "inception_4d/double3x3a"
   name: "inception_4d/double3x3a"
@@ -2736,7 +2733,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/double3x3a"
   name: "inception_4d/double3x3a/bn"
   top: "inception_4d/double3x3a/bn"
@@ -2760,13 +2757,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/double3x3a/bn"
   top: "inception_4d/double3x3a/bn"
   name: "inception_4d/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4d/double3x3a/bn"
   top: "inception_4d/double3x3b"
   name: "inception_4d/double3x3b"
@@ -2786,7 +2783,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/double3x3b"
   name: "inception_4d/double3x3b/bn"
   top: "inception_4d/double3x3b/bn"
@@ -2810,13 +2807,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/double3x3b/bn"
   top: "inception_4d/double3x3b/bn"
   name: "inception_4d/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4c/output"
   top: "inception_4d/pool"
   name: "inception_4d/pool"
@@ -2829,7 +2826,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_4d/pool"
   top: "inception_4d/pool_proj"
   name: "inception_4d/pool_proj"
@@ -2849,7 +2846,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4d/pool_proj"
   name: "inception_4d/pool_proj/bn"
   top: "inception_4d/pool_proj/bn"
@@ -2873,13 +2870,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4d/pool_proj/bn"
   top: "inception_4d/pool_proj/bn"
   name: "inception_4d/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4d/1x1/bn"
   bottom: "inception_4d/3x3/bn"
   bottom: "inception_4d/double3x3b/bn"
@@ -2888,7 +2885,7 @@ layers {
   name: "inception_4d/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_4d/output"
   top: "loss2/ave_pool"
   name: "loss2/ave_pool"
@@ -2899,7 +2896,7 @@ layers {
     stride: 3
   }
 }
-layers {
+layer {
   bottom: "loss2/ave_pool"
   top: "loss2/conv"
   name: "loss2/conv"
@@ -2918,7 +2915,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "loss2/conv"
   name: "loss2/conv/bn"
   top: "loss2/conv/bn"
@@ -2942,13 +2939,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "loss2/conv/bn"
   top: "loss2/conv/bn"
   name: "loss2/relu_conv"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "loss2/conv/bn"
   top: "loss2/fc"
   name: "loss2/fc"
@@ -2956,10 +2953,6 @@ layers {
   param {
     lr_mult: 1
     decay_mult: 1
-  }
-  param {
-    lr_mult: 2
-    decay_mult: 0
   }
   inner_product_param {
     num_output: 1024
@@ -2970,7 +2963,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "loss2/fc"
   name: "loss2/fc/bn"
   top: "loss2/fc/bn"
@@ -2994,13 +2987,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "loss2/fc/bn"
   top: "loss2/fc/bn"
   name: "loss2/relu_fc"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "loss2/fc/bn"
   top: "loss2/classifier"
   name: "loss2/classifier"
@@ -3020,10 +3013,11 @@ layers {
     }
     bias_filler {
       type: "constant"
+      value: 0
     }
   }
 }
-layers {
+layer {
   bottom: "loss2/classifier"
   bottom: "label"
   top: "loss2/loss1"
@@ -3031,7 +3025,7 @@ layers {
   type: "SoftmaxWithLoss"
   loss_weight: 0.3
 }
-layers {
+layer {
   bottom: "loss2/classifier"
   bottom: "label"
   top: "loss2/top-1"
@@ -3041,7 +3035,7 @@ layers {
     phase: TEST
   }
 }
-layers {
+layer {
   bottom: "loss2/classifier"
   bottom: "label"
   top: "loss2/top-5"
@@ -3054,7 +3048,7 @@ layers {
     phase: TEST
   }
 }
-layers {
+layer {
   bottom: "inception_4d/output"
   top: "inception_4e/3x3_reduce"
   name: "inception_4e/3x3_reduce"
@@ -3074,7 +3068,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4e/3x3_reduce"
   name: "inception_4e/3x3_reduce/bn"
   top: "inception_4e/3x3_reduce/bn"
@@ -3098,13 +3092,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4e/3x3_reduce/bn"
   top: "inception_4e/3x3_reduce/bn"
   name: "inception_4e/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4e/3x3_reduce/bn"
   top: "inception_4e/3x3"
   name: "inception_4e/3x3"
@@ -3126,7 +3120,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4e/3x3"
   name: "inception_4e/3x3/bn"
   top: "inception_4e/3x3/bn"
@@ -3150,13 +3144,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4e/3x3/bn"
   top: "inception_4e/3x3/bn"
   name: "inception_4e/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4d/output"
   top: "inception_4e/double3x3_reduce"
   name: "inception_4e/double3x3_reduce"
@@ -3176,7 +3170,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4e/double3x3_reduce"
   name: "inception_4e/double3x3_reduce/bn"
   top: "inception_4e/double3x3_reduce/bn"
@@ -3200,13 +3194,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4e/double3x3_reduce/bn"
   top: "inception_4e/double3x3_reduce/bn"
   name: "inception_4e/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4e/double3x3_reduce/bn"
   top: "inception_4e/double3x3a"
   name: "inception_4e/double3x3a"
@@ -3227,7 +3221,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4e/double3x3a"
   name: "inception_4e/double3x3a/bn"
   top: "inception_4e/double3x3a/bn"
@@ -3251,13 +3245,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4e/double3x3a/bn"
   top: "inception_4e/double3x3a/bn"
   name: "inception_4e/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4e/double3x3a/bn"
   top: "inception_4e/double3x3b"
   name: "inception_4e/double3x3b"
@@ -3278,7 +3272,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_4e/double3x3b"
   name: "inception_4e/double3x3b/bn"
   top: "inception_4e/double3x3b/bn"
@@ -3302,13 +3296,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_4e/double3x3b/bn"
   top: "inception_4e/double3x3b/bn"
   name: "inception_4e/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4d/output"
   top: "inception_4e/pool/3x3_s2"
   name: "inception_4e/pool/3x3_s2"
@@ -3319,7 +3313,7 @@ layers {
     stride: 2
   }
 }
-layers {
+layer {
   bottom: "inception_4e/3x3/bn"
   bottom: "inception_4e/double3x3b/bn"
   bottom: "inception_4e/pool/3x3_s2"
@@ -3327,7 +3321,7 @@ layers {
   name: "inception_4e/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_4e/output"
   top: "inception_5a/1x1"
   name: "inception_5a/1x1"
@@ -3347,7 +3341,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/1x1"
   name: "inception_5a/1x1/bn"
   top: "inception_5a/1x1/bn"
@@ -3371,13 +3365,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/1x1/bn"
   top: "inception_5a/1x1/bn"
   name: "inception_5a/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4e/output"
   top: "inception_5a/3x3_reduce"
   name: "inception_5a/3x3_reduce"
@@ -3397,7 +3391,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/3x3_reduce"
   name: "inception_5a/3x3_reduce/bn"
   top: "inception_5a/3x3_reduce/bn"
@@ -3421,13 +3415,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/3x3_reduce/bn"
   top: "inception_5a/3x3_reduce/bn"
   name: "inception_5a/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/3x3_reduce/bn"
   top: "inception_5a/3x3"
   name: "inception_5a/3x3"
@@ -3447,7 +3441,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/3x3"
   name: "inception_5a/3x3/bn"
   top: "inception_5a/3x3/bn"
@@ -3471,13 +3465,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/3x3/bn"
   top: "inception_5a/3x3/bn"
   name: "inception_5a/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4e/output"
   top: "inception_5a/double3x3_reduce"
   name: "inception_5a/double3x3_reduce"
@@ -3497,7 +3491,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/double3x3_reduce"
   name: "inception_5a/double3x3_reduce/bn"
   top: "inception_5a/double3x3_reduce/bn"
@@ -3521,13 +3515,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/double3x3_reduce/bn"
   top: "inception_5a/double3x3_reduce/bn"
   name: "inception_5a/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/double3x3_reduce/bn"
   top: "inception_5a/double3x3a"
   name: "inception_5a/double3x3a"
@@ -3548,7 +3542,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/double3x3a"
   name: "inception_5a/double3x3a/bn"
   top: "inception_5a/double3x3a/bn"
@@ -3572,13 +3566,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/double3x3a/bn"
   top: "inception_5a/double3x3a/bn"
   name: "inception_5a/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/double3x3a/bn"
   top: "inception_5a/double3x3b"
   name: "inception_5a/double3x3b"
@@ -3598,7 +3592,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/double3x3b"
   name: "inception_5a/double3x3b/bn"
   top: "inception_5a/double3x3b/bn"
@@ -3622,13 +3616,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/double3x3b/bn"
   top: "inception_5a/double3x3b/bn"
   name: "inception_5a/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_4e/output"
   top: "inception_5a/pool"
   name: "inception_5a/pool"
@@ -3641,7 +3635,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_5a/pool"
   top: "inception_5a/pool_proj"
   name: "inception_5a/pool_proj"
@@ -3660,7 +3654,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5a/pool_proj"
   name: "inception_5a/pool_proj/bn"
   top: "inception_5a/pool_proj/bn"
@@ -3684,13 +3678,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5a/pool_proj/bn"
   top: "inception_5a/pool_proj/bn"
   name: "inception_5a/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/1x1/bn"
   bottom: "inception_5a/3x3/bn"
   bottom: "inception_5a/double3x3b/bn"
@@ -3699,7 +3693,7 @@ layers {
   name: "inception_5a/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_5a/output"
   top: "inception_5b/1x1"
   name: "inception_5b/1x1"
@@ -3719,7 +3713,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/1x1"
   name: "inception_5b/1x1/bn"
   top: "inception_5b/1x1/bn"
@@ -3743,13 +3737,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/1x1/bn"
   top: "inception_5b/1x1/bn"
   name: "inception_5b/relu_1x1"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/output"
   top: "inception_5b/3x3_reduce"
   name: "inception_5b/3x3_reduce"
@@ -3768,7 +3762,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/3x3_reduce"
   name: "inception_5b/3x3_reduce/bn"
   top: "inception_5b/3x3_reduce/bn"
@@ -3792,13 +3786,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/3x3_reduce/bn"
   top: "inception_5b/3x3_reduce/bn"
   name: "inception_5b/relu_3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5b/3x3_reduce/bn"
   top: "inception_5b/3x3"
   name: "inception_5b/3x3"
@@ -3819,7 +3813,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/3x3"
   name: "inception_5b/3x3/bn"
   top: "inception_5b/3x3/bn"
@@ -3843,13 +3837,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/3x3/bn"
   top: "inception_5b/3x3/bn"
   name: "inception_5b/relu_3x3"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/output"
   top: "inception_5b/double3x3_reduce"
   name: "inception_5b/double3x3_reduce"
@@ -3869,7 +3863,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/double3x3_reduce"
   name: "inception_5b/double3x3_reduce/bn"
   top: "inception_5b/double3x3_reduce/bn"
@@ -3893,13 +3887,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/double3x3_reduce/bn"
   top: "inception_5b/double3x3_reduce/bn"
   name: "inception_5b/relu_double3x3_reduce"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5b/double3x3_reduce/bn"
   top: "inception_5b/double3x3a"
   name: "inception_5b/double3x3a"
@@ -3920,7 +3914,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/double3x3a"
   name: "inception_5b/double3x3a/bn"
   top: "inception_5b/double3x3a/bn"
@@ -3944,13 +3938,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/double3x3a/bn"
   top: "inception_5b/double3x3a/bn"
   name: "inception_5b/relu_double3x3a"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5b/double3x3a/bn"
   top: "inception_5b/double3x3b"
   name: "inception_5b/double3x3b"
@@ -3970,7 +3964,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/double3x3b"
   name: "inception_5b/double3x3b/bn"
   top: "inception_5b/double3x3b/bn"
@@ -3994,13 +3988,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/double3x3b/bn"
   top: "inception_5b/double3x3b/bn"
   name: "inception_5b/relu_double3x3b"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5a/output"
   top: "inception_5b/pool"
   name: "inception_5b/pool"
@@ -4012,7 +4006,7 @@ layers {
     pad: 1
   }
 }
-layers {
+layer {
   bottom: "inception_5b/pool"
   top: "inception_5b/pool_proj"
   name: "inception_5b/pool_proj"
@@ -4031,7 +4025,7 @@ layers {
   }
 }
 ## BN
-layers {
+layer {
   bottom: "inception_5b/pool_proj"
   name: "inception_5b/pool_proj/bn"
   top: "inception_5b/pool_proj/bn"
@@ -4055,13 +4049,13 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "inception_5b/pool_proj/bn"
   top: "inception_5b/pool_proj/bn"
   name: "inception_5b/relu_pool_proj"
   type: "ReLU"
 }
-layers {
+layer {
   bottom: "inception_5b/1x1/bn"
   bottom: "inception_5b/3x3/bn"
   bottom: "inception_5b/double3x3b/bn"
@@ -4070,7 +4064,7 @@ layers {
   name: "inception_5b/output"
   type: "Concat"
 }
-layers {
+layer {
   bottom: "inception_5b/output"
   top: "pool5/7x7_s1"
   name: "pool5/7x7_s1"
@@ -4081,7 +4075,7 @@ layers {
     stride: 1
   }
 }
-layers {
+layer {
   bottom: "pool5/7x7_s1"
   top: "loss3/classifier"
   name: "loss3/classifier"
@@ -4105,7 +4099,7 @@ layers {
     }
   }
 }
-layers {
+layer {
   bottom: "loss3/classifier"
   bottom: "label"
   top: "loss3/loss3"
@@ -4113,7 +4107,7 @@ layers {
   type: "SoftmaxWithLoss"
   loss_weight: 1
 }
-layers {
+layer {
   bottom: "loss3/classifier"
   bottom: "label"
   top: "loss3/top-1"
@@ -4123,7 +4117,7 @@ layers {
     phase: TEST
   }
 }
-layers {
+layer {
   bottom: "loss3/classifier"
   bottom: "label"
   top: "loss3/top-5"
