@@ -10,6 +10,8 @@
 
 #include "caffe/util/math_functions.hpp"
 
+#include <algorithm>
+
 namespace caffe {
 
 using boost::weak_ptr;
@@ -64,7 +66,9 @@ DataReader::QueuePair::~QueuePair() {
 
 DataReader::Body::Body(const LayerParameter& param)
     : param_(param),
-      new_queue_pairs_() {
+      new_queue_pairs_(),
+      num_skips_(0) {
+  num_skips_ = std::max((int)(param_.data_param().batch_size()), 10); 
   StartInternalThread();
 }
 
@@ -112,7 +116,7 @@ void DataReader::Body::read_one(db::Cursor* cursor, QueuePair* qp) {
 
   if (param_.data_param().shuffle()) { // shuffle
     // Do shuffle!! randomly skipping data, pretending the batch to contain nearly random accessed data
-    unsigned int skip = caffe_rng_rand() % (param_.data_param().batch_size() * 5/*10*/); //caffe_rng_rand() % dataset_->size();
+    unsigned int skip = caffe_rng_rand() % num_skips_; //caffe_rng_rand() % dataset_->size();
     while (skip-- > 0) {
       cursor->Next();
     }
