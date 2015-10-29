@@ -75,6 +75,20 @@ void PaddingLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         count, top_diff, bottom_diff, NUM_, CHANNEL_, HEIGHT_IN_, WIDTH_IN_,
         PAD_);
     CUDA_POST_KERNEL_CHECK;
+
+    //const Dtype* top_diff = top[0]->gpu_diff(); 
+    //Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
+    //caffe_gpu_set(bottom[0]->count(), Dtype(0), bottom[0]->mutable_gpu_diff());
+    //for (int n = 0; n < NUM_; ++n) {
+    //  for (int c = 0; c < CHANNEL_; ++c) {
+    //    for (int h = 0; h < HEIGHT_IN_; ++h) {
+    //      // copy the width part
+    //      caffe_gpu_axpy(WIDTH_IN_, (Dtype)1.,
+    //         top_diff+top[0]->offset(n, c, h + PAD_, PAD_),
+    //         bottom_diff+bottom[0]->offset(n, c, h));
+    //    }
+    //  }
+    //}
   }
 }
 
