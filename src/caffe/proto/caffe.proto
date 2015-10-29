@@ -372,6 +372,7 @@ message LayerParameter {
   optional MemoryDataParameter memory_data_param = 119;
   optional MVNParameter mvn_param = 120;
   optional PoolingParameter pooling_param = 121;
+    optional PaddingParameter padding_param = 8266714; 
   optional PowerParameter power_param = 122;
   optional PReLUParameter prelu_param = 131;
   optional PythonParameter python_param = 130;
@@ -911,6 +912,11 @@ message OCROIPoolingParameter {
   // Multiplicative spatial scale factor to translate ROI coords from their
   // input scale to the scale used when pooling
   optional float spatial_scale = 5 [default = 1];
+}
+
+// Message that stores parameters used by PaddingLayer
+message PaddingParameter {
+  optional uint32 pad = 1 [default = 0]; // The pooled output height
 }
 
 message SigmoidParameter {
