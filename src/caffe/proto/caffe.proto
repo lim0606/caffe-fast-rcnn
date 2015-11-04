@@ -390,6 +390,7 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+    optional ThreeDGridParameter grid_param = 8266715; 
 }
 
 // Message that stores parameters used to apply transformation
@@ -917,6 +918,16 @@ message OCROIPoolingParameter {
 // Message that stores parameters used by PaddingLayer
 message PaddingParameter {
   optional uint32 pad = 1 [default = 0]; // The pooled output height
+}
+
+// Message that stores parameters used in ThreeDGridParameter
+message ThreeDGridParameter {
+  optional uint32 num_output = 1; // The number of outputs for the layer
+  optional bool priority = 2 [default = false]; // whether to use priority dimension behavior
+  optional FillerParameter weight_filler = 3; // The filler for the weight
+  optional FillerParameter bias_filler = 4; // The filler for the bias
+  // Whether to enable displaying debug_info in the unrolled recurrent net.
+  optional bool debug_info = 5 [default = false];
 }
 
 message SigmoidParameter {

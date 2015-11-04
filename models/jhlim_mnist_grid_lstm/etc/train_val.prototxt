@@ -1,0 +1,795 @@
+# "3D Grid-LSTM example"
+name: "3DGridLSTM_example"
+### Training Set
+layer {
+  top: "data"
+  top: "label"
+  name: "data"
+  type: "Data"
+  data_param {
+    source: "/path/to/mnist_train_lmdb"
+    batch_size: 32
+    backend: LMDB
+    shuffle: true
+  }
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: true
+    scale: 0.003921569 # 1/255
+  }
+}
+### Validation Set
+layer {
+  top: "data"
+  top: "label"
+  name: "data"
+  type: "Data"
+  data_param {
+    source: "/path/to/mnist_val_lmdb"
+    batch_size: 32
+    backend: LMDB
+  }
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mirror: false
+    scale: 0.003921569 # 1/255
+  }
+}
+
+### 3D Grid LSTM start
+layer { 
+  bottom: "data"
+  top:    "d0/d/h" 
+  top:    "d0/d/c"
+  # if peephole is false
+  #top:    "d0/d/c_transformed"
+  type: "Split" 
+}
+layer {
+  bottom: "d0/d/h" 
+  top:    "d0/d/h_transformed"
+  type: "Convolution" 
+  param {
+    name: "W_h/d"
+  }
+  param { 
+    name: "b_h/d"
+  }
+  convolution_param {
+    num_output: ?? # = num_output x 4 x 3
+    kernel_size: 1
+    stride: 1
+}
+## Make c_transformed if peephole is true
+#layer { 
+#  bottom: "d0/d/c"
+#  top:    "d0/d/c_transformed"
+#  type: "Convolution"
+#  param {
+#    name: "W_c/d"
+#  }
+#  param {
+#    name: "b_c/d"
+#  }
+#  convolution_param {
+#    num_output: ?? # = num_output x 3 x 3
+#    kernel_size: 1
+#    stride: 1
+#  }
+#  bias_term: false
+#}
+## Slice d0/h_transformed 
+# Slice d0/h_transformed along height dimension
+layer {
+  bottom: "d0/d/h_transformed"
+  top:    "h1_d0/d/h_transformed"
+  top:    "h2_d0/d/h_transformed"
+  name: "split/d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 2
+  }
+}
+# (Further) slice h1_d0/h_transformed along width dimension
+layer {
+  bottom: "h1_d0/d/h_transformed"
+  top:    "h1_w1_d0/d/h_transformed"
+  top:    "h1_w2_d0/d/h_transformed"
+  name: "split/h1_d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 3
+  }
+}
+# (Further) slice h2_d0/h_transformed along width dimension
+layer {
+  bottom: "h2_d0/d/h_transformed"
+  top:    "h2_w1_d0/d/h_transformed"
+  top:    "h2_w2_d0/d/h_transformed"
+  name: "split/h2_d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 3
+  }
+}
+# (Further) slice h1_w1_d0/d/h_transformed along feature dimension
+layer {
+  bottom: "h1_w1_d0/d/h_transformed"
+  top:    "h1_w1_d0/d/h_transformed/hw"
+  top:    "h1_w1_d0/d/h_transformed/d"
+  name: "split/h1_w1_d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: ?? # = num_output x 4 x 2 + 1
+  }
+}
+# (Further) slice h1_w2_d0/d/h_transformed along feature dimension
+layer {
+  bottom: "h1_w2_d0/d/h_transformed"
+  top:    "h1_w2_d0/d/h_transformed/hw"
+  top:    "h1_w2_d0/d/h_transformed/d"
+  name: "split/h1_w2_d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: ?? # = num_output x 4 x 2 + 1
+  }
+}
+# (Further) slice h2_w1_d0/d/h_transformed along feature dimension
+layer {
+  bottom: "h2_w1_d0/d/h_transformed"
+  top:    "h2_w1_d0/d/h_transformed/hw"
+  top:    "h2_w1_d0/d/h_transformed/d"
+  name: "split/h2_w1_d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: ?? # = num_output x 4 x 2 + 1
+  }
+}
+# (Further) slice h2_w2_d0/d/h_transformed along feature dimension
+layer {
+  bottom: "h2_w2_d0/d/h_transformed"
+  top:    "h2_w2_d0/d/h_transformed/hw"
+  top:    "h2_w2_d0/d/h_transformed/d"
+  name: "split/h2_w2_d0/d/h_transformed"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: ?? # = num_output x 4 x 2 + 1
+  }
+}
+
+## Slice d0/c
+# Slice d0/c along height dimension
+layer {
+  bottom: "d0/d/c"
+  top:    "h1_d0/d/c"
+  top:    "h2_d0/d/c"
+  type: "Slice"
+  slice_param {
+    axis: 2
+  }
+}
+# (Further) slice d0/c along width dimension
+layer {
+  bottom: "h1_d0/d/c"
+  top:    "h1_w1_d0/d/c"
+  top:    "h1_w2_d0/d/c"
+  type: "Slice"
+  slice_param {
+    axis: 3
+  }
+}
+layer {
+  bottom: "h2_d0/d/c"
+  top:    "h2_w1_d0/d/c"
+  top:    "h2_w2_d0/d/c"
+  type: "Slice"
+  slice_param {
+    axis: 3
+  }
+}
+## Initialize memory cells and hiddens in 3DGridLayer along height dimension and width dimension
+input: "h0_w1_d1/h/c" # height increment direction
+input: "h0_w1_d1/h/h" # c = mem cell, h = hidden state 
+
+input: "h0_w2_d1/h/c" # height increment direction
+input: "h0_w2_d1/h/h"  
+
+input: "h1_w0_d1/w/c" # width increment direction
+input: "h1_w0_d1/w/h"  
+
+input: "h2_w0_d1/w/c" # width increment direction
+input: "h2_w0_d1/w/h"  
+
+## Propagate grid architecture 
+# Basic naming convention:
+#   "<position>/<direction>/<component>" where component is layer specific (e.g. c and h is for LSTM)
+# first, 1
+layer {
+  bottom: "h0_w1_d1/h/h"
+  top:    "h0_w1_d1/h/h_transformed/hw"
+  name:   "h0_w1_d1/h/h_transformed/hw"
+  type: "InnerProduct" 
+  param {
+    name: "W_h/h/hw" 
+  }  
+  inner_product_param {
+    num_output: ?? # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+# if priority is off
+  layer {
+    bottom: "h0_w1_d1/h/h"
+    top:    "h0_w1_d1/h/h_transformed/d"
+    type: "InnerProduct"
+    param {
+      name: "W_h/h/d"
+    }
+    inner_product_param {
+      num_output: ?? # = num_output x 4 
+      bias_term: false
+    }
+  }
+layer {
+  bottom: "h1_w0_d1/w/h"
+  top:    "h1_w0_d1/w/h_transformed/hw" 
+  type: "InnerProduct"
+  param { 
+    name: "W_h/w/hw"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+# if priority is off
+  layer {
+    bottom: "h1_w0_d1/w/h"
+    top:    "h1_w0_d1/w/h_transformed/d"
+    type: "InnerProduct"
+    param {
+      name: "W_h/w/d"
+    }
+    inner_product_param {
+      num_output: ?? # = num_output x 4
+      bias_term: false
+    }
+  }
+layer {
+  bottom: "h0_w1_d1/h/h_transformed/hw"
+  bottom: "h1_w0_d1/w/h_transformed/hw"
+  bottom: "h1_w1_d0/d/h_transformed/hw"
+  top:    "h1_w1_d1/hw/gate_input"
+  type: "Eltwise"
+  eltwise_param {
+    operation: SUM
+  }
+}
+layer {
+  bottom: "h1_w1_d1/hw/gate_input"
+  top:    "h1_w1_d1/h/gate_input"
+  top:    "h1_w1_d1/w/gate_input"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: ?? # = num_output x 4 + 1
+  }
+}
+layer { # height increment direction 
+  bottom: "h0_w1_d1/h/c" # height increment (memory) cell
+  bottom: "h1_w1_d1/h/gate_input" 
+  top:    "h1_w1_d1/h/c"
+  top:    "h1_w1_d1/h/h"
+  name:   "h1_w1_d1/h"
+  type: "LSTMUnit" 
+}
+# first, 2
+layer {
+  bottom: "h1_w1_d1/h/h"
+  top:    "h1_w1_d1/h/h_transformed/hw"
+  type: "InnerProduct"
+  param { 
+    name: "W_h/h/hw"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h1_w1_d1/h/h"
+  top:    "h1_w1_d1/h/h_transformed/d"
+  type: "InnerProduct"
+  param {
+    name: "W_h/h/d"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h2_w0_d1/w/h"
+  top:    "h2_w0_d1/w/h_transformed/hw"
+  type: "InnerProduct"
+  param {
+    name: "W_h/w/hw"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+# if priority is off
+  layer {
+    bottom: "h2_w0_d1/w/h"
+    top:    "h2_w0_d1/w/h_transformed/d"
+    type: "InnerProduct"
+    param {
+      name: "W_h/w/d"
+    }
+    inner_product_param {
+      num_output: ?? # = num_output x 4
+      bias_term: false
+    }
+  }
+layer {
+  bottom: "h1_w1_d1/h/h_transformed/hw"
+  bottom: "h2_w0_d1/w/h_transformed/hw"
+  bottom: "h2_w1_d0/d/h_transformed/hw"
+  top:    "h2_w1_d1/hw/gate_input"
+  type: "Eltwise"
+  eltwise_param {
+    operation: SUM
+  }
+}
+layer {
+  bottom: "h2_w1_d1/hw/gate_input"
+  top:    "h2_w1_d1/h/gate_input"
+  top:    "h2_w1_d1/w/gate_input"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: ?? # = num_output x 4 + 1
+  }
+}
+layer { 
+  bottom: "h1_w1_d1/h/c" 
+  bottom: "h2_w1_d1/h/gate_input"
+  top:    "h2_w1_d1/h/c"
+  top:    "h2_w1_d1/h/h"
+  name:   "h2_w1_d1/h"
+  type: "LSTMUnit"
+}
+# if priority is on
+  layer {
+    bottom: "h2_w1_d1/h/h"
+    top:    "h2_w1_d1/h/h_transformed/d"
+    type: "InnerProduct"
+    param {
+      name: "W_h/h/d"
+    }
+    inner_product_param {
+      num_output: ?? # = num_output x 4
+      bias_term: false
+    }
+  }
+
+# second, 1
+layer { # width increment direction
+  bottom: "h1_w0_d1/w/c" # width increment (memory) cell
+  bottom: "h1_w1_d1/w/gate_input"
+  top:    "h1_w1_d1/w/c"
+  top:    "h1_w1_d1/w/h"
+  name:   "h1_w1_d1/w"
+  type: "LSTMUnit"
+}
+# second, 2
+layer { 
+  bottom: "h2_w0_d1/w/c" 
+  bottom: "h2_w1_d1/w/gate_input"
+  top:    "h2_w1_d1/w/c"
+  top:    "h2_w1_d1/w/h"
+  name:   "h2_w1_d1/w"
+  type: "LSTMUnit"
+}
+
+# third, 1
+layer { 
+  bottom: "h0_w2_d1/h/h"
+  top:    "h0_w2_d1/h/h_transformed/hw"
+  type: "InnerProduct"
+  param {
+    name: "W_h/h/hw"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+# if priority is off
+  layer { 
+    bottom: "h0_w2_d1/h/h"
+    top:    "h0_w2_d1/h/h_transformed/d"
+    type: "InnerProduct"
+    param {
+      name: "W_h/h/d"
+    }
+    inner_product_param {
+      num_output: ?? # = num_output x 4
+      bias_term: false
+    }
+  }
+layer {
+  bottom: "h1_w1_d1/w/h"
+  top:    "h1_w1_d1/w/h_transformed/hw"
+  type: "InnerProduct"
+  param {
+    name: "W_h/w/hw"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h1_w1_d1/w/h"
+  top:    "h1_w1_d1/w/h_transformed/d"
+  type: "InnerProduct"
+  param {
+    name: "W_h/w/d"
+  }
+  inner_product_param {
+    num_output: ?? # = num_output x 4
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h0_w2_d1/h/h_transformed/hw"
+  bottom: "h1_w1_d1/w/h_transformed/hw"
+  bottom: "h1_w2_d0/d/h_transformed/hw"
+  top:    "h1_w2_d1/hw/gate_input"
+  type: "Eltwise"
+  eltwise_param {
+    operation: SUM
+  }
+}
+layer {
+  bottom: "h1_w2_d1/hw/gate_input"
+  top:    "h1_w2_d1/h/gate_input"
+  top:    "h1_w2_d1/w/gate_input"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: # = num_output x 4 + 1 
+  }
+}
+layer { # height increment direction
+  bottom: "h0_w2_d1/h/c"
+  bottom: "h1_w2_d1/h/gate_input" 
+  top:    "h1_w2_d1/h/c"
+  top:    "h1_w2_d1/h/h"
+  name:   "h1_w2_d1/h" 
+  type: "LSTMUnit" 
+}
+
+# third, 2
+layer {
+  bottom: "h1_w2_d1/h/h"
+  top:    "h1_w2_d1/h/h_transformed/hw"
+  param {
+    name: "W_h/h/hw"
+  }
+  inner_product_param {
+    num_output: # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h1_w2_d1/h/h"
+  top:    "h1_w2_d1/h/h_transformed/d"
+  param {
+    name: "W_h/h/d"
+  }
+  inner_product_param {
+    num_output: # = num_output x 4
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h2_w1_d1/w/h"
+  top:    "h2_w1_d1/w/h_transformed/hw"
+  param {
+    name: "W_h/w/hw"
+  }
+  inner_product_param {
+    num_output: # = num_output x 4 x 2
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h2_w1_d1/w/h"
+  top:    "h2_w1_d1/w/h_transformed/d"
+  param {
+    name: "W_h/w/d"
+  }
+  inner_product_param {
+    num_output: # = num_output x 4
+    bias_term: false
+  }
+}
+layer {
+  bottom: "h1_w2_d1/h/h_transformed/hw"
+  bottom: "h2_w1_d1/w/h_transformed/hw"
+  bottom: "h2_w2_d0/d/h_transformed/hw"
+  top:    "h2_w2_d1/hw/gate_input"
+  type: "Eltwise"
+  eltwise_param {
+    operation: SUM
+  }
+}
+layer {
+  bottom: "h2_w2_d1/hw/gate_input"
+  top:    "h2_w2_d1/h/gate_input"
+  top:    "h2_w2_d1/w/gate_input"
+  type: "Slice"
+  slice_param {
+    axis: 1
+    slice_point: # = num_output x 4 + 1
+  }
+}
+layer {
+  bottom: "h1_w2_d1/h/c"
+  bottom: "h2_w2_d1/h/gate_input"
+  top:    "h2_w2_d1/h/c"
+  top:    "h2_w2_d1/h/h"
+  name:   "h2_w2_d1/h"
+  type: "LSTMUnit"
+}
+# if priority is on
+  layer {
+    bottom: "h2_w2_d1/h/h"
+    top:    "h2_w2_d1/h/h_transformed/d"
+    param {
+      name: "W_h/h/d"
+    }
+    inner_product_param {
+      num_output: # = num_output x 4
+      bias_term: false
+    }
+  }
+
+# fourth, 1
+layer { # width increment direction
+  bottom: "h1_w1_d1/w/c" # width increment (memory) cell
+  bottom: "h1_w2_d1/w/gate_input"
+  top:    "h1_w2_d1/w/c"
+  top:    "h1_w2_d1/w/h"
+  name:   "h1_w2_d1/w"
+  type: "LSTMUnit"
+}
+# if priority is on
+  layer {
+    bottom: "h1_w2_d1/w/h"
+    top:    "h1_w2_d1/w/h_transformed/d"
+    type: "InnerProduct"
+    param {
+      name: "W_h/w/d"
+    }
+    inner_product_param {
+      num_output: ?? # = num_output x 4
+      bias_term: false
+    }
+  }
+# fourth, 2
+layer {
+  bottom: "h2_w1_d1/w/c"
+  bottom: "h2_w2_d1/w/gate_input"
+  top:    "h2_w2_d1/w/c"
+  top:    "h2_w2_d1/w/h"
+  name:   "h2_w2_d1/w"
+  type: "LSTMUnit"
+}
+# if priority is on
+  layer {
+    bottom: "h2_w2_d1/w/h"
+    top:    "h2_w2_d1/w/h_transformed/d"
+    param {
+      name: "W_h/w/d"
+    }
+    inner_product_param {
+      num_output: # = num_output x 4
+      bias_term: false
+    }
+  }
+
+# fifth, 1
+# if priority is on
+  layer {
+    bottom: "h1_w1_d1/h/h_transformed/d"
+    bottom: "h1_w1_d1/w/h_transformed/d"
+    bottom: "h1_w1_d0/d/h_transformed/d"
+    top:    "h1_w1_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+# else (if priority is off)
+  layer {
+    bottom: "h0_w1_d1/h/h_transformed/d"
+    bottom: "h1_w0_d1/w/h_transformed/d"
+    bottom: "h1_w1_d0/d/h_transformed/d"
+    top:    "h1_w1_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+layer { 
+  bottom: "h1_w1_d0/d/c" # depth increment (memory) cell
+  bottom: "h1_w1_d1/d/gate_input"
+  top:    "h1_w1_d1/d/c" 
+  top:    "h1_w1_d1/d/h"
+  name:   "h1_w1_d1/d"
+  type: "LSTMUnit"
+}
+# fifth, 2
+# if priority is on
+  layer {
+    bottom: "h2_w1_d1/h/h_transformed/d"
+    bottom: "h2_w1_d1/w/h_transformed/d"
+    bottom: "h2_w1_d0/d/h_transformed/d"
+    top:    "h2_w1_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+# else (if priority is off)
+  layer { 
+    bottom: "h1_w1_d1/h/h_transformed/d"
+    bottom: "h2_w0_d1/w/h_transformed/d"
+    bottom: "h2_w1_d0/d/h_transformed/d"
+    top:    "h2_w1_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+layer {
+  bottom: "h2_w1_d0/d/c"
+  bottom: "h2_w1_d1/d/gate_input"
+  top:    "h2_w1_d1/d/c"
+  top:    "h2_w1_d1/d/h"
+  name:   "h2_w1_d1/d"
+  type: "LSTMUnit"
+}  
+# fifth, 3
+# if priority is on
+  layer {
+    bottom: "h1_w2_d1/h/h_transformed/d"
+    bottom: "h1_w2_d1/w/h_transformed/d"
+    bottom: "h1_w2_d0/d/h_transformed/d"
+    top:    "h1_w2_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+# else (if priority is off)
+  layer {
+    bottom: "h0_w2_d1/h/h_transformed/d"
+    bottom: "h1_w1_d1/w/h_transformed/d"
+    bottom: "h1_w2_d0/d/h_transformed/d"
+    top:    "h1_w2_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+layer { # depth increment direction
+  bottom: "h1_w2_d0/d/c" 
+  bottom: "h1_w2_d1/d/gate_input"
+  top:    "h1_w2_d1/d/c"
+  top:    "h1_w2_d1/d/h"
+  name:   "h1_w2_d1/d"
+  type: "LSTMUnit"
+}
+# fifth, 4
+# if priority is on
+  layer {
+    bottom: "h2_w2_d1/h/h_transformed/d"
+    bottom: "h2_w2_d1/w/h_transformed/d"
+    bottom: "h2_w2_d0/d/h_transformed/d"
+    top:    "h2_w2_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+# else (if priority is off)
+  layer {
+    bottom: "h1_w2_d1/h/h_transformed/d"
+    bottom: "h2_w1_d1/w/h_transformed/d"
+    bottom: "h2_w2_d0/d/h_transformed/d"
+    top:    "h2_w2_d1/d/gate_input"
+    type: "Eltwise"
+    eltwise_param {
+      operation: SUM
+    }
+  }
+layer { # depth increment direction
+  bottom: "h2_w2_d0/d/c"
+  bottom: "h2_w2_d1/d/gate_input"
+  top:    "h2_w2_d1/d/c"
+  top:    "h2_w2_d1/d/h"
+  name:   "h2_w2_d1/d"
+  type: "LSTMUnit"
+}
+
+## Concatenate 
+# hidden
+layer {
+  bottom: "h1_w1_d1/d/h"
+  bottom: "h1_w2_d1/d/h"
+  top:    "h1_d1/d/h"
+  type: "Concat"
+  conat_param {
+    axis: 3
+  }
+}
+layer {
+  bottom: "h2_w1_d1/d/h"
+  bottom: "h2_w2_d1/d/h"
+  top:    "h2_d1/d/h"
+  type: "Concat"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  bottom: "h1_d1/d/h"
+  bottom: "h2_d1/d/h"
+  top:    "d1/d/h"
+  type: "Concat"
+  concat_param {
+    axis: 2
+  }
+}
+# memory cell
+layer {
+  bottom: "h1_w1_d1/d/c"
+  bottom: "h1_w2_d1/d/c"
+  top:    "h1_d1/d/c"
+  type: "Concat"
+  conat_param {
+    axis: 3
+  }
+}
+layer {
+  bottom: "h2_w1_d1/d/c"
+  bottom: "h2_w2_d1/d/c"
+  top:    "h2_d1/d/c"
+  type: "Concat"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  bottom: "h1_d1/d/c"
+  bottom: "h2_d1/d/c"
+  top:    "d1/d/c"
+  type: "Concat"
+  concat_param {
+    axis: 2
+  }
+}
