@@ -3723,17 +3723,44 @@ layer {
     axis: 1
   }
 }
-layer {
-  name: "relu6"
-  type: "ReLU"
-  bottom: "concat6"
-  top: "concat6"
-}
+#layer {
+#  name: "relu6"
+#  type: "ReLU"
+#  bottom: "concat6"
+#  top: "concat6"
+#}
 layer {
   name: "ip7"
   type: "InnerProduct"
   bottom: "concat6"
   top: "ip7"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "ip7"
+  top: "ip7"
+}
+layer {
+  name: "ip8"
+  type: "InnerProduct"
+  bottom: "ip7"
+  top: "ip8"
   param {
     lr_mult: 1
   }
@@ -3751,9 +3778,18 @@ layer {
   }
 }
 layer {
+  name: "prob"
+  type: "Softmax"
+  bottom: "ip8"
+  top: "prob"
+  include {
+    phase: TEST
+  }
+}
+layer {
   name: "accuracy"
   type: "Accuracy"
-  bottom: "ip7"
+  bottom: "prob"
   bottom: "label"
   top: "accuracy"
   include {
@@ -3763,7 +3799,7 @@ layer {
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "ip7"
+  bottom: "ip8"
   bottom: "label"
   top: "loss"
 }
