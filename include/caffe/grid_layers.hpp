@@ -115,6 +115,49 @@ class ThreeDGridLayer : public Layer<Dtype> {
   int channels_;
   int height_;
   int width_;
+
+  class Num {
+   public: 
+    Num(const int size, const int inc = 1) {
+      init(size, inc); 
+    }
+    inline void init(const int size, const int inc = 1) {
+      CHECK_EQ(inc*inc, 1) << "inc should be either 1 or -1";
+      inc_ = inc; 
+      size_ = size; 
+      if (inc == 1) {
+        start_ = 1;
+        end_ = size_;  
+      }
+      else { // inc_
+        start_ = size_;
+        end_ = 1;  
+      } 
+      val_ = start_; 
+    }
+    inline int next() { return val_+inc_; }
+    inline int prev() { return val_-inc_; }
+    inline void move_next() { val_=val_+inc_; }
+    inline bool is_within_range() { 
+        return (1 <= val_ && val_ <= size_); 
+    }
+    inline int val() { return val_; }
+    inline int start() { return start_; }
+    inline int end() { return end_; }
+    inline int start_prev() { return start_-inc_; }
+    
+   protected: 
+    int val_; 
+    int inc_;
+    int size_; 
+    int start_;
+    int end_;  
+  };
+
+  shared_ptr<Num> h_; 
+  shared_ptr<Num> w_;
+  int h_inc_; 
+  int w_inc_;  
 };
 
 

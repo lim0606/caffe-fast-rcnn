@@ -927,7 +927,14 @@ message ThreeDGridParameter {
   optional FillerParameter weight_filler = 3; // The filler for the weight
   optional FillerParameter bias_filler = 4; // The filler for the bias
   // Whether to enable displaying debug_info in the unrolled recurrent net.
-  optional bool debug_info = 5 [default = false];
+  enum PropagateDirection {
+    H_INC_W_INC = 0;
+    H_INC_W_DEC = 1;
+    H_DEC_W_INC = 2;
+    H_DEC_W_DEC = 3; 
+  }
+  optional PropagateDirection prop_direction = 5 [default = H_INC_W_INC];
+  optional bool debug_info = 6 [default = false];
 }
 
 message SigmoidParameter {

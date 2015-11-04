@@ -66,6 +66,27 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
         << "bottom[1] must have exactly 4 axes";
   }
 
+  // Determind propagation direction
+  ThreeDGridParameter_PropagateDirection prop_direction = this->layer_param_.grid_param().prop_direction();
+  switch (prop_direction) {
+  case ThreeDGridParameter_PropagateDirection_H_INC_W_INC:
+    h_inc_ = 1; w_inc_ = 1;
+    break;
+  case ThreeDGridParameter_PropagateDirection_H_INC_W_DEC:
+    h_inc_ = 1; w_inc_ = -1;
+    break;
+  case ThreeDGridParameter_PropagateDirection_H_DEC_W_INC:
+    h_inc_ = -1; w_inc_ = 1;
+    break;
+  case ThreeDGridParameter_PropagateDirection_H_DEC_W_DEC:
+    h_inc_ = -1; w_inc_ = -1;
+    break;
+  default:
+    LOG(FATAL) << "Unknown propagate direction.";
+  }
+  h_.reset(new Num(height_, h_inc_));
+  w_.reset(new Num(width_, w_inc_)); 
+
   // Create a NetParameter; setup the inputs that aren't unique to particular
   // recurrent architectures.
   NetParameter net_param;

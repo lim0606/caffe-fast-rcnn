@@ -106,6 +106,7 @@ layer {
   grid_param {
     num_output: 100
     priority: true
+    prop_direction: H_DEC_W_DEC
   }
 }
 layer {
