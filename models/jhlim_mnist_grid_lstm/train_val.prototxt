@@ -12,9 +12,10 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "/home/jaehyun/github/caffe-fast-rcnn/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
-    batch_size: 32
+    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
+    batch_size: 64
     backend: LMDB
+    shuffle: true
   }
 }
 layer {
@@ -29,8 +30,8 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "/home/jaehyun/github/caffe-fast-rcnn/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
-    batch_size: 32
+    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
+    batch_size: 64
     backend: LMDB
   }
 }
