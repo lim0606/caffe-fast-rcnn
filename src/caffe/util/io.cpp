@@ -228,5 +228,32 @@ void CVMatToDatum(const cv::Mat& cv_img, Datum* datum) {
   datum->set_data(buffer);
 }
 
+// added by Jaehyun Lim 
+void DatumToCVMat(const Datum& datum, cv::Mat& cv_img) {
+  int datum_channels = datum.channels();
+  int datum_height = datum.height();
+  int datum_width = datum.width();
+  //int datum_size = datum_channels * datum_height * datum_width;
+
+  cv_img.create(cv::Size(datum_height, datum_width), CV_8UC(datum_channels)); 
+  //cv::Mat cv_img(datum_height, datum_width, CV_8UC(datum_channels));
+
+  CHECK(cv_img.depth() == CV_8U) << "Image data type must be unsigned byte";
+
+  const std::string& buffer = datum.data();
+  for (int h = 0; h < datum_height; ++h) {
+    uchar* ptr = cv_img.ptr<uchar>(h);
+    int img_index = 0;
+    for (int w = 0; w < datum_width; ++w) {
+      for (int c = 0; c < datum_channels; ++c) {
+        int datum_index = (c * datum_height + h) * datum_width + w;
+        ptr[img_index] = buffer[datum_index];
+        img_index++;
+      }
+    }
+  }
+  //return cv_img;
+}
+
 
 }  // namespace caffe

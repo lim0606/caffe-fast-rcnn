@@ -135,7 +135,7 @@ cv::Mat DecodeDatumToCVMatNative(const Datum& datum);
 cv::Mat DecodeDatumToCVMat(const Datum& datum, bool is_color);
 
 void CVMatToDatum(const cv::Mat& cv_img, Datum* datum);
-
+void DatumToCVMat(const Datum& datum, cv::Mat& cv_img);
 }  // namespace caffe
 
 #endif   // CAFFE_UTIL_IO_H_

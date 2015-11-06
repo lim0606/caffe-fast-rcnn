@@ -89,6 +89,18 @@ class DataTransformer {
   void Transform(Blob<Dtype>* input_blob, Blob<Dtype>* transformed_blob);
 
   /**
+   * @brief Applies the transformation defined in the data layer's
+   * transform_param block to a cv::Mat. This one work esp. with ShiftParameter
+   *
+   * @param cv_img
+   *    cv::Mat containing the data to be transformed.
+   * @param transformed_blob
+   *    This is destination blob. It can be part of top blob's data if
+   *    set_cpu_data() is used. See image_data_layer.cpp for an example.
+   */
+  void TransformWithRandomShift(const cv::Mat& cv_img, Blob<Dtype>* transformed_blob);
+
+  /**
    * @brief Infers the shape of transformed_blob will have when
    *    the transformation is applied to the data.
    *

@@ -1,4 +1,6 @@
 #include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp> // imwrite
+#include <opencv2/imgproc/imgproc.hpp> // copyMakeBorder
 
 #include <string>
 #include <vector>
@@ -213,6 +215,135 @@ void DataTransformer<Dtype>::Transform(const vector<cv::Mat> & mat_vector,
     Transform(mat_vector[item_id], &uni_blob);
   }
 }
+
+/**
+ *  written by Jaehyun Lim 
+ *  modified from :TransformWithRandomShift(const cv::Mat& cv_img, 
+ *      Blob<Dtype>* transformed_blob)
+ */
+template<typename Dtype>
+void DataTransformer<Dtype>::TransformWithRandomShift(const cv::Mat& cv_img,
+                                       Blob<Dtype>* transformed_blob) {
+  const int crop_size = param_.crop_size();
+  const int img_channels = cv_img.channels();
+  const int img_height = cv_img.rows;
+  const int img_width = cv_img.cols;
+
+  // Check dimensions.
+  const int channels = transformed_blob->channels();
+  const int height = transformed_blob->height();
+  const int width = transformed_blob->width();
+  const int num = transformed_blob->num();
+
+  CHECK_EQ(channels, img_channels);
+  CHECK_LE(height, img_height);
+  CHECK_LE(width, img_width);
+  CHECK_GE(num, 1);
+
+  CHECK(cv_img.depth() == CV_8U) << "Image data type must be unsigned byte";
+
+  const Dtype scale = param_.scale();
+  const bool do_mirror = param_.mirror() && Rand(2);
+  const bool has_mean_file = param_.has_mean_file();
+  const bool has_mean_values = mean_values_.size() > 0;
+  const TransformationParameter_ShiftParameter shift_param = param_.shift_param(); // added  
+  const int shift = shift_param.shift(); // added
+  const bool do_shift = shift; // added
+  const float background_value = shift_param.background_value(); // added
+  CHECK_GE(background_value, 0); // added
+  CHECK_LE(background_value, 255); // added
+
+  CHECK_GT(img_channels, 0);
+  CHECK_GE(img_height, crop_size);
+  CHECK_GE(img_width, crop_size);
+
+  Dtype* mean = NULL;
+  if (has_mean_file) {
+    CHECK_EQ(img_channels, data_mean_.channels());
+    CHECK_EQ(img_height, data_mean_.height());
+    CHECK_EQ(img_width, data_mean_.width());
+    mean = data_mean_.mutable_cpu_data();
+  }
+  if (has_mean_values) {
+    CHECK(mean_values_.size() == 1 || mean_values_.size() == img_channels) <<
+     "Specify either 1 mean_value or as many as channels: " << img_channels;
+    if (img_channels > 1 && mean_values_.size() == 1) {
+      // Replicate the mean_value for simplicity
+      for (int c = 1; c < img_channels; ++c) {
+        mean_values_.push_back(mean_values_[0]);
+      }
+    }
+  }
+  
+  cv::Mat cv_shifted_img = cv_img;
+  if (do_shift) { // added
+    int top = Rand(shift); 
+    int bottom = shift - top; 
+    int left = Rand(shift); 
+    int right = shift - left; 
+    cv::copyMakeBorder(cv_img, cv_shifted_img, 
+        top, bottom, left, right, 
+        cv::BORDER_CONSTANT, cv::Scalar(background_value)); 
+    CHECK_EQ((bool)crop_size, 1) 
+        << "To use shift in transform_param, you should specify crop_size in transform_param as your target image size. "
+        << "(target) height = (target) width = crop_size."; 
+  }
+
+  int h_off = 0;
+  int w_off = 0;
+  cv::Mat cv_cropped_img = cv_shifted_img; //cv_img;
+  if (crop_size) {
+    CHECK_EQ(crop_size, height);
+    CHECK_EQ(crop_size, width);
+    // We only do random crop when we do training.
+    if (phase_ == TRAIN) {
+      h_off = Rand(img_height - crop_size + 1);
+      w_off = Rand(img_width - crop_size + 1);
+    } else {
+      h_off = (img_height - crop_size) / 2;
+      w_off = (img_width - crop_size) / 2;
+    }
+    cv::Rect roi(w_off, h_off, crop_size, crop_size);
+    cv_cropped_img = cv_shifted_img(roi); //cv_img(roi);
+  } else {
+    CHECK_EQ(img_height, height);
+    CHECK_EQ(img_width, width);
+  }
+
+  CHECK(cv_cropped_img.data);
+
+  Dtype* transformed_data = transformed_blob->mutable_cpu_data();
+  int top_index;
+  for (int h = 0; h < height; ++h) {
+    const uchar* ptr = cv_cropped_img.ptr<uchar>(h);
+    int img_index = 0;
+    for (int w = 0; w < width; ++w) {
+      for (int c = 0; c < img_channels; ++c) {
+        if (do_mirror) {
+          top_index = (c * height + h) * width + (width - 1 - w);
+        } else {
+          top_index = (c * height + h) * width + w;
+        }
+        // int top_index = (c * height + h) * width + w;
+        Dtype pixel = static_cast<Dtype>(ptr[img_index++]);
+        if (has_mean_file) {
+          int mean_index = (c * img_height + h_off + h) * img_width + w_off + w;
+          transformed_data[top_index] =
+            (pixel - mean[mean_index]) * scale;
+        } else {
+          if (has_mean_values) {
+            transformed_data[top_index] =
+              (pixel - mean_values_[c]) * scale;
+          } else {
+            transformed_data[top_index] = pixel * scale;
+          }
+        }
+      }
+    }
+  }
+}
+
+
 
 template<typename Dtype>
 void DataTransformer<Dtype>::Transform(const cv::Mat& cv_img,

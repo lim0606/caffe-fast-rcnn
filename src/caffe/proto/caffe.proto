@@ -414,6 +414,12 @@ message TransformationParameter {
   optional bool force_color = 6 [default = false];
   // Force the decoded image to have 1 color channels.
   optional bool force_gray = 7 [default = false];
+  // Shift image with Uniform(shift) in two dimension.
+  message ShiftParameter {
+    required uint32 shift = 1 [default = 0]; 
+    required float background_value = 2; // this value will be padded when shift operation is applied
+  } 
+  optional ShiftParameter shift_param = 8; 
 }
 
 // Message that stores parameters shared by loss layers
