@@ -57,10 +57,10 @@ DEFINE_int32(train_iterations, 0,
 //    "The total number of test data. (you should specify in this implementation)."); 
 //DEFINE_int32(batchsize, 0,
 //    "The batchsize. (you should specify in this implementation)."); 
-DEFINE_string(labellist, "",
-    "The text file having labels and their corresponding indices.");
-DEFINE_string(outfile, "",
-    "The text file including prediction probabilities.");
+//DEFINE_string(labellist, "",
+//    "The text file having labels and their corresponding indices.");
+//DEFINE_string(outfile, "",
+//    "The text file including prediction probabilities.");
 
 
 int main(int argc, char** argv) {
@@ -77,25 +77,25 @@ int main(int argc, char** argv) {
     gflags::ShowUsageWithFlagsRestrict(argv[0], "tools/predict_bn");
   }
 
-  // label (open label txt for label names)
-  std::ifstream label_file;
-  label_file.open(FLAGS_labellist.c_str());
-  if(!label_file) {
-    printf("Please specify the label list file. For example, ndsb_labels.txt.\n"); 
-    return 0;  
-  }
-  std::vector< std::string > label_names;
-  std::vector< int > label_indices;
-  std::string label_name;
-  int label_index; 
-  int num_classes;
-  while(label_file >> label_index >> label_name) {
-    //printf("label_index: %d, label_name: %s\n", label_index, label_name.c_str()); 
-    label_names.push_back(label_name); 
-    label_indices.push_back(label_index); 
-  }
-  num_classes = label_indices.size(); 
-  printf("# of classes : %d\n", num_classes); 
+//  // label (open label txt for label names)
+//  std::ifstream label_file;
+//  label_file.open(FLAGS_labellist.c_str());
+//  if(!label_file) {
+//    printf("Please specify the label list file. For example, ndsb_labels.txt.\n"); 
+//    return 0;  
+//  }
+//  std::vector< std::string > label_names;
+//  std::vector< int > label_indices;
+//  std::string label_name;
+//  int label_index; 
+//  int num_classes;
+//  while(label_file >> label_index >> label_name) {
+//    //printf("label_index: %d, label_name: %s\n", label_index, label_name.c_str()); 
+//    label_names.push_back(label_name); 
+//    label_indices.push_back(label_index); 
+//  }
+//  num_classes = label_indices.size(); 
+//  printf("# of classes : %d\n", num_classes); 
 
   //
   CHECK_GT(FLAGS_train_model.size(), 0) << "Need a train model definition to do preprosessing.";
