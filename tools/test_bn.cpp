@@ -407,8 +407,8 @@ int main(int argc, char** argv) {
   }
   LOG(INFO) << "layer type: " << test_layers[0]->layer_param().type(); 
   //switch (test_layers[0]->layer_param().type()) {
-  if (layers[0]->layer_param().type() == "Data" ||
-      layers[0]->layer_param().type() == "CompactData") {//case 5: {// DATA
+  if (test_layers[0]->layer_param().type() == "Data" ||
+      test_layers[0]->layer_param().type() == "CompactData") {//case 5: {// DATA
       batchsize = test_layers[0]->layer_param().data_param().batch_size();
       //LOG(INFO) << "batch_size: " << batch_size;
       int backend = (int)test_layers[0]->layer_param().data_param().backend();
@@ -432,7 +432,7 @@ int main(int argc, char** argv) {
         return 0;
       }
     }
-    else if (layers[0]->layer_param().type() == "ImageData") { //case 12: { // IMAGE_DATA
+    else if (test_layers[0]->layer_param().type() == "ImageData") { //case 12: { // IMAGE_DATA
       batchsize = test_layers[0]->layer_param().image_data_param().batch_size();
       LOG(INFO) << "batch_size: " << batchsize;
       unsigned int number_of_lines = 0;       
