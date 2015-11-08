@@ -17,9 +17,9 @@ lr_policy: "fixed"
 # Display every 100 iterations
 display: 100
 # The maximum number of iterations
-max_iter: 10000
+max_iter: 100000
 # snapshot intermediate results
-snapshot: 5000
+snapshot: 10000
 snapshot_prefix: "models/jhlim_mnist_grid_lstm/3d_grid_lstm_mnist"
 # solver mode: CPU or GPU
 solver_type: ADAM

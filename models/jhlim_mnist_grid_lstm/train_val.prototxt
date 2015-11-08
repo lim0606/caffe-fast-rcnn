@@ -2,7 +2,7 @@
 name: "3D Grid LSTM network for MNIST"
 layer {
   name: "mnist"
-  type: "Data"
+  type: "CompactData"
   top: "data"
   top: "label"
   include {
@@ -10,10 +10,16 @@ layer {
   }
   transform_param {
     scale: 0.00390625
+    crop_size: 28
+    shift_param: {
+      shift: 4
+      background_value: 0
+    }
   }
   data_param {
-    source: "/home/jaehyun/github/caffe-fast-rcnn/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
-    batch_size: 32
+    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
+    batch_size: 64
+    shuffle: true
     backend: LMDB
   }
 }
@@ -29,8 +35,8 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "/home/jaehyun/github/caffe-fast-rcnn/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
-    batch_size: 32
+    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
+    batch_size: 64
     backend: LMDB
   }
 }
