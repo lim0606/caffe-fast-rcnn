@@ -1,0 +1,3807 @@
+# 3D Grid LSTM
+name: "3D Grid LSTM network for MNIST"
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+    crop_size: 28
+  }
+  data_param {
+    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
+    batch_size: 64
+    shuffle: true
+    backend: LMDB
+  }
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
+    batch_size: 64
+    backend: LMDB
+  }
+}
+layer {
+  name: "slice0" 
+  type: "Slice"
+  bottom: "data"
+  top: "data_h1"
+  top: "data_h2"
+  top: "data_h3"
+  top: "data_h4"
+  top: "data_h5"
+  top: "data_h6"
+  top: "data_h7"
+  top: "data_h8"
+  top: "data_h9"
+  top: "data_h10"
+  top: "data_h11"
+  top: "data_h12"
+  top: "data_h13"
+  top: "data_h14"
+  slice_param {
+    axis: 2
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice1"
+  type: "Slice" 
+  bottom: "data_h1"
+  top: "data_h1_w1"
+  top: "data_h1_w2"
+  top: "data_h1_w3"
+  top: "data_h1_w4"
+  top: "data_h1_w5"
+  top: "data_h1_w6"
+  top: "data_h1_w7"
+  top: "data_h1_w8"
+  top: "data_h1_w9"
+  top: "data_h1_w10"
+  top: "data_h1_w11"
+  top: "data_h1_w12"
+  top: "data_h1_w13"
+  top: "data_h1_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice2"
+  type: "Slice"
+  bottom: "data_h2"
+  top: "data_h2_w1"
+  top: "data_h2_w2"
+  top: "data_h2_w3"
+  top: "data_h2_w4"
+  top: "data_h2_w5"
+  top: "data_h2_w6"
+  top: "data_h2_w7"
+  top: "data_h2_w8"
+  top: "data_h2_w9"
+  top: "data_h2_w10"
+  top: "data_h2_w11"
+  top: "data_h2_w12"
+  top: "data_h2_w13"
+  top: "data_h2_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice3"
+  type: "Slice"
+  bottom: "data_h3"
+  top: "data_h3_w1"
+  top: "data_h3_w2"
+  top: "data_h3_w3"
+  top: "data_h3_w4"
+  top: "data_h3_w5"
+  top: "data_h3_w6"
+  top: "data_h3_w7"
+  top: "data_h3_w8"
+  top: "data_h3_w9"
+  top: "data_h3_w10"
+  top: "data_h3_w11"
+  top: "data_h3_w12"
+  top: "data_h3_w13"
+  top: "data_h3_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice4"
+  type: "Slice"
+  bottom: "data_h4"
+  top: "data_h4_w1"
+  top: "data_h4_w2"
+  top: "data_h4_w3"
+  top: "data_h4_w4"
+  top: "data_h4_w5"
+  top: "data_h4_w6"
+  top: "data_h4_w7"
+  top: "data_h4_w8"
+  top: "data_h4_w9"
+  top: "data_h4_w10"
+  top: "data_h4_w11"
+  top: "data_h4_w12"
+  top: "data_h4_w13"
+  top: "data_h4_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice5"
+  type: "Slice"
+  bottom: "data_h5"
+  top: "data_h5_w1"
+  top: "data_h5_w2"
+  top: "data_h5_w3"
+  top: "data_h5_w4"
+  top: "data_h5_w5"
+  top: "data_h5_w6"
+  top: "data_h5_w7"
+  top: "data_h5_w8"
+  top: "data_h5_w9"
+  top: "data_h5_w10"
+  top: "data_h5_w11"
+  top: "data_h5_w12"
+  top: "data_h5_w13"
+  top: "data_h5_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice6"
+  type: "Slice"
+  bottom: "data_h6"
+  top: "data_h6_w1"
+  top: "data_h6_w2"
+  top: "data_h6_w3"
+  top: "data_h6_w4"
+  top: "data_h6_w5"
+  top: "data_h6_w6"
+  top: "data_h6_w7"
+  top: "data_h6_w8"
+  top: "data_h6_w9"
+  top: "data_h6_w10"
+  top: "data_h6_w11"
+  top: "data_h6_w12"
+  top: "data_h6_w13"
+  top: "data_h6_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice7"
+  type: "Slice"
+  bottom: "data_h7"
+  top: "data_h7_w1"
+  top: "data_h7_w2"
+  top: "data_h7_w3"
+  top: "data_h7_w4"
+  top: "data_h7_w5"
+  top: "data_h7_w6"
+  top: "data_h7_w7"
+  top: "data_h7_w8"
+  top: "data_h7_w9"
+  top: "data_h7_w10"
+  top: "data_h7_w11"
+  top: "data_h7_w12"
+  top: "data_h7_w13"
+  top: "data_h7_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice8"
+  type: "Slice"
+  bottom: "data_h8"
+  top: "data_h8_w1"
+  top: "data_h8_w2"
+  top: "data_h8_w3"
+  top: "data_h8_w4"
+  top: "data_h8_w5"
+  top: "data_h8_w6"
+  top: "data_h8_w7"
+  top: "data_h8_w8"
+  top: "data_h8_w9"
+  top: "data_h8_w10"
+  top: "data_h8_w11"
+  top: "data_h8_w12"
+  top: "data_h8_w13"
+  top: "data_h8_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice9"
+  type: "Slice"
+  bottom: "data_h9"
+  top: "data_h9_w1"
+  top: "data_h9_w2"
+  top: "data_h9_w3"
+  top: "data_h9_w4"
+  top: "data_h9_w5"
+  top: "data_h9_w6"
+  top: "data_h9_w7"
+  top: "data_h9_w8"
+  top: "data_h9_w9"
+  top: "data_h9_w10"
+  top: "data_h9_w11"
+  top: "data_h9_w12"
+  top: "data_h9_w13"
+  top: "data_h9_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice10"
+  type: "Slice"
+  bottom: "data_h10"
+  top: "data_h10_w1"
+  top: "data_h10_w2"
+  top: "data_h10_w3"
+  top: "data_h10_w4"
+  top: "data_h10_w5"
+  top: "data_h10_w6"
+  top: "data_h10_w7"
+  top: "data_h10_w8"
+  top: "data_h10_w9"
+  top: "data_h10_w10"
+  top: "data_h10_w11"
+  top: "data_h10_w12"
+  top: "data_h10_w13"
+  top: "data_h10_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice11"
+  type: "Slice"
+  bottom: "data_h11"
+  top: "data_h11_w1"
+  top: "data_h11_w2"
+  top: "data_h11_w3"
+  top: "data_h11_w4"
+  top: "data_h11_w5"
+  top: "data_h11_w6"
+  top: "data_h11_w7"
+  top: "data_h11_w8"
+  top: "data_h11_w9"
+  top: "data_h11_w10"
+  top: "data_h11_w11"
+  top: "data_h11_w12"
+  top: "data_h11_w13"
+  top: "data_h11_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice12"
+  type: "Slice"
+  bottom: "data_h12"
+  top: "data_h12_w1"
+  top: "data_h12_w2"
+  top: "data_h12_w3"
+  top: "data_h12_w4"
+  top: "data_h12_w5"
+  top: "data_h12_w6"
+  top: "data_h12_w7"
+  top: "data_h12_w8"
+  top: "data_h12_w9"
+  top: "data_h12_w10"
+  top: "data_h12_w11"
+  top: "data_h12_w12"
+  top: "data_h12_w13"
+  top: "data_h12_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice13"
+  type: "Slice"
+  bottom: "data_h13"
+  top: "data_h13_w1"
+  top: "data_h13_w2"
+  top: "data_h13_w3"
+  top: "data_h13_w4"
+  top: "data_h13_w5"
+  top: "data_h13_w6"
+  top: "data_h13_w7"
+  top: "data_h13_w8"
+  top: "data_h13_w9"
+  top: "data_h13_w10"
+  top: "data_h13_w11"
+  top: "data_h13_w12"
+  top: "data_h13_w13"
+  top: "data_h13_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "slice14"
+  type: "Slice"
+  bottom: "data_h14"
+  top: "data_h14_w1"
+  top: "data_h14_w2"
+  top: "data_h14_w3"
+  top: "data_h14_w4"
+  top: "data_h14_w5"
+  top: "data_h14_w6"
+  top: "data_h14_w7"
+  top: "data_h14_w8"
+  top: "data_h14_w9"
+  top: "data_h14_w10"
+  top: "data_h14_w11"
+  top: "data_h14_w12"
+  top: "data_h14_w13"
+  top: "data_h14_w14"
+  slice_param {
+    axis: 3
+    slice_point: 2
+    slice_point: 4
+    slice_point: 6
+    slice_point: 8
+    slice_point: 10
+    slice_point: 12
+    slice_point: 14
+    slice_point: 16
+    slice_point: 18
+    slice_point: 20
+    slice_point: 22
+    slice_point: 24
+    slice_point: 26
+  }
+}
+layer {
+  name: "reshape_h1_w1"
+  type: "Reshape"
+  bottom: "data_h1_w1"
+  top:    "data_h1_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w2"
+  type: "Reshape"
+  bottom: "data_h1_w2"
+  top:    "data_h1_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w3"
+  type: "Reshape"
+  bottom: "data_h1_w3"
+  top:    "data_h1_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w4"
+  type: "Reshape"
+  bottom: "data_h1_w4"
+  top:    "data_h1_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w5"
+  type: "Reshape"
+  bottom: "data_h1_w5"
+  top:    "data_h1_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w6"
+  type: "Reshape"
+  bottom: "data_h1_w6"
+  top:    "data_h1_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w7"
+  type: "Reshape"
+  bottom: "data_h1_w7"
+  top:    "data_h1_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w8"
+  type: "Reshape"
+  bottom: "data_h1_w8"
+  top:    "data_h1_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w9"
+  type: "Reshape"
+  bottom: "data_h1_w9"
+  top:    "data_h1_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w10"
+  type: "Reshape"
+  bottom: "data_h1_w10"
+  top:    "data_h1_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w11"
+  type: "Reshape"
+  bottom: "data_h1_w11"
+  top:    "data_h1_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w12"
+  type: "Reshape"
+  bottom: "data_h1_w12"
+  top:    "data_h1_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w13"
+  type: "Reshape"
+  bottom: "data_h1_w13"
+  top:    "data_h1_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h1_w14"
+  type: "Reshape"
+  bottom: "data_h1_w14"
+  top:    "data_h1_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w1"
+  type: "Reshape"
+  bottom: "data_h2_w1"
+  top:    "data_h2_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w2"
+  type: "Reshape"
+  bottom: "data_h2_w2"
+  top:    "data_h2_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w3"
+  type: "Reshape"
+  bottom: "data_h2_w3"
+  top:    "data_h2_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w4"
+  type: "Reshape"
+  bottom: "data_h2_w4"
+  top:    "data_h2_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w5"
+  type: "Reshape"
+  bottom: "data_h2_w5"
+  top:    "data_h2_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w6"
+  type: "Reshape"
+  bottom: "data_h2_w6"
+  top:    "data_h2_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w7"
+  type: "Reshape"
+  bottom: "data_h2_w7"
+  top:    "data_h2_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w8"
+  type: "Reshape"
+  bottom: "data_h2_w8"
+  top:    "data_h2_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w9"
+  type: "Reshape"
+  bottom: "data_h2_w9"
+  top:    "data_h2_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w10"
+  type: "Reshape"
+  bottom: "data_h2_w10"
+  top:    "data_h2_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w11"
+  type: "Reshape"
+  bottom: "data_h2_w11"
+  top:    "data_h2_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w12"
+  type: "Reshape"
+  bottom: "data_h2_w12"
+  top:    "data_h2_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w13"
+  type: "Reshape"
+  bottom: "data_h2_w13"
+  top:    "data_h2_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h2_w14"
+  type: "Reshape"
+  bottom: "data_h2_w14"
+  top:    "data_h2_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w1"
+  type: "Reshape"
+  bottom: "data_h3_w1"
+  top:    "data_h3_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w2"
+  type: "Reshape"
+  bottom: "data_h3_w2"
+  top:    "data_h3_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w3"
+  type: "Reshape"
+  bottom: "data_h3_w3"
+  top:    "data_h3_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w4"
+  type: "Reshape"
+  bottom: "data_h3_w4"
+  top:    "data_h3_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w5"
+  type: "Reshape"
+  bottom: "data_h3_w5"
+  top:    "data_h3_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w6"
+  type: "Reshape"
+  bottom: "data_h3_w6"
+  top:    "data_h3_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w7"
+  type: "Reshape"
+  bottom: "data_h3_w7"
+  top:    "data_h3_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w8"
+  type: "Reshape"
+  bottom: "data_h3_w8"
+  top:    "data_h3_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w9"
+  type: "Reshape"
+  bottom: "data_h3_w9"
+  top:    "data_h3_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w10"
+  type: "Reshape"
+  bottom: "data_h3_w10"
+  top:    "data_h3_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w11"
+  type: "Reshape"
+  bottom: "data_h3_w11"
+  top:    "data_h3_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w12"
+  type: "Reshape"
+  bottom: "data_h3_w12"
+  top:    "data_h3_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w13"
+  type: "Reshape"
+  bottom: "data_h3_w13"
+  top:    "data_h3_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h3_w14"
+  type: "Reshape"
+  bottom: "data_h3_w14"
+  top:    "data_h3_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w1"
+  type: "Reshape"
+  bottom: "data_h4_w1"
+  top:    "data_h4_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w2"
+  type: "Reshape"
+  bottom: "data_h4_w2"
+  top:    "data_h4_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w3"
+  type: "Reshape"
+  bottom: "data_h4_w3"
+  top:    "data_h4_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w4"
+  type: "Reshape"
+  bottom: "data_h4_w4"
+  top:    "data_h4_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w5"
+  type: "Reshape"
+  bottom: "data_h4_w5"
+  top:    "data_h4_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w6"
+  type: "Reshape"
+  bottom: "data_h4_w6"
+  top:    "data_h4_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w7"
+  type: "Reshape"
+  bottom: "data_h4_w7"
+  top:    "data_h4_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w8"
+  type: "Reshape"
+  bottom: "data_h4_w8"
+  top:    "data_h4_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w9"
+  type: "Reshape"
+  bottom: "data_h4_w9"
+  top:    "data_h4_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w10"
+  type: "Reshape"
+  bottom: "data_h4_w10"
+  top:    "data_h4_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w11"
+  type: "Reshape"
+  bottom: "data_h4_w11"
+  top:    "data_h4_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w12"
+  type: "Reshape"
+  bottom: "data_h4_w12"
+  top:    "data_h4_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w13"
+  type: "Reshape"
+  bottom: "data_h4_w13"
+  top:    "data_h4_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h4_w14"
+  type: "Reshape"
+  bottom: "data_h4_w14"
+  top:    "data_h4_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w1"
+  type: "Reshape"
+  bottom: "data_h5_w1"
+  top:    "data_h5_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w2"
+  type: "Reshape"
+  bottom: "data_h5_w2"
+  top:    "data_h5_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w3"
+  type: "Reshape"
+  bottom: "data_h5_w3"
+  top:    "data_h5_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w4"
+  type: "Reshape"
+  bottom: "data_h5_w4"
+  top:    "data_h5_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w5"
+  type: "Reshape"
+  bottom: "data_h5_w5"
+  top:    "data_h5_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w6"
+  type: "Reshape"
+  bottom: "data_h5_w6"
+  top:    "data_h5_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w7"
+  type: "Reshape"
+  bottom: "data_h5_w7"
+  top:    "data_h5_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w8"
+  type: "Reshape"
+  bottom: "data_h5_w8"
+  top:    "data_h5_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w9"
+  type: "Reshape"
+  bottom: "data_h5_w9"
+  top:    "data_h5_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w10"
+  type: "Reshape"
+  bottom: "data_h5_w10"
+  top:    "data_h5_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w11"
+  type: "Reshape"
+  bottom: "data_h5_w11"
+  top:    "data_h5_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w12"
+  type: "Reshape"
+  bottom: "data_h5_w12"
+  top:    "data_h5_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w13"
+  type: "Reshape"
+  bottom: "data_h5_w13"
+  top:    "data_h5_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h5_w14"
+  type: "Reshape"
+  bottom: "data_h5_w14"
+  top:    "data_h5_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w1"
+  type: "Reshape"
+  bottom: "data_h6_w1"
+  top:    "data_h6_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w2"
+  type: "Reshape"
+  bottom: "data_h6_w2"
+  top:    "data_h6_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w3"
+  type: "Reshape"
+  bottom: "data_h6_w3"
+  top:    "data_h6_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w4"
+  type: "Reshape"
+  bottom: "data_h6_w4"
+  top:    "data_h6_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w5"
+  type: "Reshape"
+  bottom: "data_h6_w5"
+  top:    "data_h6_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w6"
+  type: "Reshape"
+  bottom: "data_h6_w6"
+  top:    "data_h6_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w7"
+  type: "Reshape"
+  bottom: "data_h6_w7"
+  top:    "data_h6_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w8"
+  type: "Reshape"
+  bottom: "data_h6_w8"
+  top:    "data_h6_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w9"
+  type: "Reshape"
+  bottom: "data_h6_w9"
+  top:    "data_h6_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w10"
+  type: "Reshape"
+  bottom: "data_h6_w10"
+  top:    "data_h6_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w11"
+  type: "Reshape"
+  bottom: "data_h6_w11"
+  top:    "data_h6_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w12"
+  type: "Reshape"
+  bottom: "data_h6_w12"
+  top:    "data_h6_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w13"
+  type: "Reshape"
+  bottom: "data_h6_w13"
+  top:    "data_h6_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h6_w14"
+  type: "Reshape"
+  bottom: "data_h6_w14"
+  top:    "data_h6_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w1"
+  type: "Reshape"
+  bottom: "data_h7_w1"
+  top:    "data_h7_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w2"
+  type: "Reshape"
+  bottom: "data_h7_w2"
+  top:    "data_h7_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w3"
+  type: "Reshape"
+  bottom: "data_h7_w3"
+  top:    "data_h7_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w4"
+  type: "Reshape"
+  bottom: "data_h7_w4"
+  top:    "data_h7_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w5"
+  type: "Reshape"
+  bottom: "data_h7_w5"
+  top:    "data_h7_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w6"
+  type: "Reshape"
+  bottom: "data_h7_w6"
+  top:    "data_h7_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w7"
+  type: "Reshape"
+  bottom: "data_h7_w7"
+  top:    "data_h7_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w8"
+  type: "Reshape"
+  bottom: "data_h7_w8"
+  top:    "data_h7_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w9"
+  type: "Reshape"
+  bottom: "data_h7_w9"
+  top:    "data_h7_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w10"
+  type: "Reshape"
+  bottom: "data_h7_w10"
+  top:    "data_h7_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w11"
+  type: "Reshape"
+  bottom: "data_h7_w11"
+  top:    "data_h7_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w12"
+  type: "Reshape"
+  bottom: "data_h7_w12"
+  top:    "data_h7_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w13"
+  type: "Reshape"
+  bottom: "data_h7_w13"
+  top:    "data_h7_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h7_w14"
+  type: "Reshape"
+  bottom: "data_h7_w14"
+  top:    "data_h7_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w1"
+  type: "Reshape"
+  bottom: "data_h8_w1"
+  top:    "data_h8_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w2"
+  type: "Reshape"
+  bottom: "data_h8_w2"
+  top:    "data_h8_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w3"
+  type: "Reshape"
+  bottom: "data_h8_w3"
+  top:    "data_h8_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w4"
+  type: "Reshape"
+  bottom: "data_h8_w4"
+  top:    "data_h8_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w5"
+  type: "Reshape"
+  bottom: "data_h8_w5"
+  top:    "data_h8_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w6"
+  type: "Reshape"
+  bottom: "data_h8_w6"
+  top:    "data_h8_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w7"
+  type: "Reshape"
+  bottom: "data_h8_w7"
+  top:    "data_h8_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w8"
+  type: "Reshape"
+  bottom: "data_h8_w8"
+  top:    "data_h8_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w9"
+  type: "Reshape"
+  bottom: "data_h8_w9"
+  top:    "data_h8_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w10"
+  type: "Reshape"
+  bottom: "data_h8_w10"
+  top:    "data_h8_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w11"
+  type: "Reshape"
+  bottom: "data_h8_w11"
+  top:    "data_h8_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w12"
+  type: "Reshape"
+  bottom: "data_h8_w12"
+  top:    "data_h8_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w13"
+  type: "Reshape"
+  bottom: "data_h8_w13"
+  top:    "data_h8_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h8_w14"
+  type: "Reshape"
+  bottom: "data_h8_w14"
+  top:    "data_h8_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w1"
+  type: "Reshape"
+  bottom: "data_h9_w1"
+  top:    "data_h9_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w2"
+  type: "Reshape"
+  bottom: "data_h9_w2"
+  top:    "data_h9_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w3"
+  type: "Reshape"
+  bottom: "data_h9_w3"
+  top:    "data_h9_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w4"
+  type: "Reshape"
+  bottom: "data_h9_w4"
+  top:    "data_h9_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w5"
+  type: "Reshape"
+  bottom: "data_h9_w5"
+  top:    "data_h9_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w6"
+  type: "Reshape"
+  bottom: "data_h9_w6"
+  top:    "data_h9_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w7"
+  type: "Reshape"
+  bottom: "data_h9_w7"
+  top:    "data_h9_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w8"
+  type: "Reshape"
+  bottom: "data_h9_w8"
+  top:    "data_h9_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w9"
+  type: "Reshape"
+  bottom: "data_h9_w9"
+  top:    "data_h9_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w10"
+  type: "Reshape"
+  bottom: "data_h9_w10"
+  top:    "data_h9_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w11"
+  type: "Reshape"
+  bottom: "data_h9_w11"
+  top:    "data_h9_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w12"
+  type: "Reshape"
+  bottom: "data_h9_w12"
+  top:    "data_h9_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w13"
+  type: "Reshape"
+  bottom: "data_h9_w13"
+  top:    "data_h9_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h9_w14"
+  type: "Reshape"
+  bottom: "data_h9_w14"
+  top:    "data_h9_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w1"
+  type: "Reshape"
+  bottom: "data_h10_w1"
+  top:    "data_h10_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w2"
+  type: "Reshape"
+  bottom: "data_h10_w2"
+  top:    "data_h10_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w3"
+  type: "Reshape"
+  bottom: "data_h10_w3"
+  top:    "data_h10_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w4"
+  type: "Reshape"
+  bottom: "data_h10_w4"
+  top:    "data_h10_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w5"
+  type: "Reshape"
+  bottom: "data_h10_w5"
+  top:    "data_h10_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w6"
+  type: "Reshape"
+  bottom: "data_h10_w6"
+  top:    "data_h10_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w7"
+  type: "Reshape"
+  bottom: "data_h10_w7"
+  top:    "data_h10_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w8"
+  type: "Reshape"
+  bottom: "data_h10_w8"
+  top:    "data_h10_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w9"
+  type: "Reshape"
+  bottom: "data_h10_w9"
+  top:    "data_h10_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w10"
+  type: "Reshape"
+  bottom: "data_h10_w10"
+  top:    "data_h10_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w11"
+  type: "Reshape"
+  bottom: "data_h10_w11"
+  top:    "data_h10_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w12"
+  type: "Reshape"
+  bottom: "data_h10_w12"
+  top:    "data_h10_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w13"
+  type: "Reshape"
+  bottom: "data_h10_w13"
+  top:    "data_h10_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h10_w14"
+  type: "Reshape"
+  bottom: "data_h10_w14"
+  top:    "data_h10_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w1"
+  type: "Reshape"
+  bottom: "data_h11_w1"
+  top:    "data_h11_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w2"
+  type: "Reshape"
+  bottom: "data_h11_w2"
+  top:    "data_h11_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w3"
+  type: "Reshape"
+  bottom: "data_h11_w3"
+  top:    "data_h11_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w4"
+  type: "Reshape"
+  bottom: "data_h11_w4"
+  top:    "data_h11_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w5"
+  type: "Reshape"
+  bottom: "data_h11_w5"
+  top:    "data_h11_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w6"
+  type: "Reshape"
+  bottom: "data_h11_w6"
+  top:    "data_h11_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w7"
+  type: "Reshape"
+  bottom: "data_h11_w7"
+  top:    "data_h11_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w8"
+  type: "Reshape"
+  bottom: "data_h11_w8"
+  top:    "data_h11_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w9"
+  type: "Reshape"
+  bottom: "data_h11_w9"
+  top:    "data_h11_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w10"
+  type: "Reshape"
+  bottom: "data_h11_w10"
+  top:    "data_h11_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w11"
+  type: "Reshape"
+  bottom: "data_h11_w11"
+  top:    "data_h11_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w12"
+  type: "Reshape"
+  bottom: "data_h11_w12"
+  top:    "data_h11_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w13"
+  type: "Reshape"
+  bottom: "data_h11_w13"
+  top:    "data_h11_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h11_w14"
+  type: "Reshape"
+  bottom: "data_h11_w14"
+  top:    "data_h11_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w1"
+  type: "Reshape"
+  bottom: "data_h12_w1"
+  top:    "data_h12_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w2"
+  type: "Reshape"
+  bottom: "data_h12_w2"
+  top:    "data_h12_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w3"
+  type: "Reshape"
+  bottom: "data_h12_w3"
+  top:    "data_h12_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w4"
+  type: "Reshape"
+  bottom: "data_h12_w4"
+  top:    "data_h12_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w5"
+  type: "Reshape"
+  bottom: "data_h12_w5"
+  top:    "data_h12_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w6"
+  type: "Reshape"
+  bottom: "data_h12_w6"
+  top:    "data_h12_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w7"
+  type: "Reshape"
+  bottom: "data_h12_w7"
+  top:    "data_h12_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w8"
+  type: "Reshape"
+  bottom: "data_h12_w8"
+  top:    "data_h12_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w9"
+  type: "Reshape"
+  bottom: "data_h12_w9"
+  top:    "data_h12_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w10"
+  type: "Reshape"
+  bottom: "data_h12_w10"
+  top:    "data_h12_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w11"
+  type: "Reshape"
+  bottom: "data_h12_w11"
+  top:    "data_h12_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w12"
+  type: "Reshape"
+  bottom: "data_h12_w12"
+  top:    "data_h12_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w13"
+  type: "Reshape"
+  bottom: "data_h12_w13"
+  top:    "data_h12_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h12_w14"
+  type: "Reshape"
+  bottom: "data_h12_w14"
+  top:    "data_h12_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w1"
+  type: "Reshape"
+  bottom: "data_h13_w1"
+  top:    "data_h13_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w2"
+  type: "Reshape"
+  bottom: "data_h13_w2"
+  top:    "data_h13_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w3"
+  type: "Reshape"
+  bottom: "data_h13_w3"
+  top:    "data_h13_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w4"
+  type: "Reshape"
+  bottom: "data_h13_w4"
+  top:    "data_h13_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w5"
+  type: "Reshape"
+  bottom: "data_h13_w5"
+  top:    "data_h13_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w6"
+  type: "Reshape"
+  bottom: "data_h13_w6"
+  top:    "data_h13_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w7"
+  type: "Reshape"
+  bottom: "data_h13_w7"
+  top:    "data_h13_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w8"
+  type: "Reshape"
+  bottom: "data_h13_w8"
+  top:    "data_h13_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w9"
+  type: "Reshape"
+  bottom: "data_h13_w9"
+  top:    "data_h13_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w10"
+  type: "Reshape"
+  bottom: "data_h13_w10"
+  top:    "data_h13_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w11"
+  type: "Reshape"
+  bottom: "data_h13_w11"
+  top:    "data_h13_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w12"
+  type: "Reshape"
+  bottom: "data_h13_w12"
+  top:    "data_h13_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w13"
+  type: "Reshape"
+  bottom: "data_h13_w13"
+  top:    "data_h13_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h13_w14"
+  type: "Reshape"
+  bottom: "data_h13_w14"
+  top:    "data_h13_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w1"
+  type: "Reshape"
+  bottom: "data_h14_w1"
+  top:    "data_h14_w1/reshape" 
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w2"
+  type: "Reshape"
+  bottom: "data_h14_w2"
+  top:    "data_h14_w2/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w3"
+  type: "Reshape"
+  bottom: "data_h14_w3"
+  top:    "data_h14_w3/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w4"
+  type: "Reshape"
+  bottom: "data_h14_w4"
+  top:    "data_h14_w4/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w5"
+  type: "Reshape"
+  bottom: "data_h14_w5"
+  top:    "data_h14_w5/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w6"
+  type: "Reshape"
+  bottom: "data_h14_w6"
+  top:    "data_h14_w6/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w7"
+  type: "Reshape"
+  bottom: "data_h14_w7"
+  top:    "data_h14_w7/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w8"
+  type: "Reshape"
+  bottom: "data_h14_w8"
+  top:    "data_h14_w8/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w9"
+  type: "Reshape"
+  bottom: "data_h14_w9"
+  top:    "data_h14_w9/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w10"
+  type: "Reshape"
+  bottom: "data_h14_w10"
+  top:    "data_h14_w10/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w11"
+  type: "Reshape"
+  bottom: "data_h14_w11"
+  top:    "data_h14_w11/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w12"
+  type: "Reshape"
+  bottom: "data_h14_w12"
+  top:    "data_h14_w12/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w13"
+  type: "Reshape"
+  bottom: "data_h14_w13"
+  top:    "data_h14_w13/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "reshape_h14_w14"
+  type: "Reshape"
+  bottom: "data_h14_w14"
+  top:    "data_h14_w14/reshape"
+  reshape_param {
+    shape {
+    dim: 0
+    dim: -1
+    dim: 1
+    dim: 1
+    }
+  }
+}
+layer {
+  name: "concat_h1"
+  type: "Concat"
+  top: "concat_h1"
+  bottom: "data_h1_w1/reshape"
+  bottom: "data_h1_w2/reshape"
+  bottom: "data_h1_w3/reshape"
+  bottom: "data_h1_w4/reshape"
+  bottom: "data_h1_w5/reshape"
+  bottom: "data_h1_w6/reshape"
+  bottom: "data_h1_w7/reshape"
+  bottom: "data_h1_w8/reshape"
+  bottom: "data_h1_w9/reshape"
+  bottom: "data_h1_w10/reshape"
+  bottom: "data_h1_w11/reshape"
+  bottom: "data_h1_w12/reshape"
+  bottom: "data_h1_w13/reshape"
+  bottom: "data_h1_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h2"
+  type: "Concat"
+  top: "concat_h2"
+  bottom: "data_h2_w1/reshape"
+  bottom: "data_h2_w2/reshape"
+  bottom: "data_h2_w3/reshape"
+  bottom: "data_h2_w4/reshape"
+  bottom: "data_h2_w5/reshape"
+  bottom: "data_h2_w6/reshape"
+  bottom: "data_h2_w7/reshape"
+  bottom: "data_h2_w8/reshape"
+  bottom: "data_h2_w9/reshape"
+  bottom: "data_h2_w10/reshape"
+  bottom: "data_h2_w11/reshape"
+  bottom: "data_h2_w12/reshape"
+  bottom: "data_h2_w13/reshape"
+  bottom: "data_h2_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h3"
+  type: "Concat"
+  top: "concat_h3"
+  bottom: "data_h3_w1/reshape"
+  bottom: "data_h3_w2/reshape"
+  bottom: "data_h3_w3/reshape"
+  bottom: "data_h3_w4/reshape"
+  bottom: "data_h3_w5/reshape"
+  bottom: "data_h3_w6/reshape"
+  bottom: "data_h3_w7/reshape"
+  bottom: "data_h3_w8/reshape"
+  bottom: "data_h3_w9/reshape"
+  bottom: "data_h3_w10/reshape"
+  bottom: "data_h3_w11/reshape"
+  bottom: "data_h3_w12/reshape"
+  bottom: "data_h3_w13/reshape"
+  bottom: "data_h3_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h4"
+  type: "Concat"
+  top: "concat_h4"
+  bottom: "data_h4_w1/reshape"
+  bottom: "data_h4_w2/reshape"
+  bottom: "data_h4_w3/reshape"
+  bottom: "data_h4_w4/reshape"
+  bottom: "data_h4_w5/reshape"
+  bottom: "data_h4_w6/reshape"
+  bottom: "data_h4_w7/reshape"
+  bottom: "data_h4_w8/reshape"
+  bottom: "data_h4_w9/reshape"
+  bottom: "data_h4_w10/reshape"
+  bottom: "data_h4_w11/reshape"
+  bottom: "data_h4_w12/reshape"
+  bottom: "data_h4_w13/reshape"
+  bottom: "data_h4_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h5"
+  type: "Concat"
+  top: "concat_h5"
+  bottom: "data_h5_w1/reshape"
+  bottom: "data_h5_w2/reshape"
+  bottom: "data_h5_w3/reshape"
+  bottom: "data_h5_w4/reshape"
+  bottom: "data_h5_w5/reshape"
+  bottom: "data_h5_w6/reshape"
+  bottom: "data_h5_w7/reshape"
+  bottom: "data_h5_w8/reshape"
+  bottom: "data_h5_w9/reshape"
+  bottom: "data_h5_w10/reshape"
+  bottom: "data_h5_w11/reshape"
+  bottom: "data_h5_w12/reshape"
+  bottom: "data_h5_w13/reshape"
+  bottom: "data_h5_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h6"
+  type: "Concat"
+  top: "concat_h6"
+  bottom: "data_h6_w1/reshape"
+  bottom: "data_h6_w2/reshape"
+  bottom: "data_h6_w3/reshape"
+  bottom: "data_h6_w4/reshape"
+  bottom: "data_h6_w5/reshape"
+  bottom: "data_h6_w6/reshape"
+  bottom: "data_h6_w7/reshape"
+  bottom: "data_h6_w8/reshape"
+  bottom: "data_h6_w9/reshape"
+  bottom: "data_h6_w10/reshape"
+  bottom: "data_h6_w11/reshape"
+  bottom: "data_h6_w12/reshape"
+  bottom: "data_h6_w13/reshape"
+  bottom: "data_h6_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h7"
+  type: "Concat"
+  top: "concat_h7"
+  bottom: "data_h7_w1/reshape"
+  bottom: "data_h7_w2/reshape"
+  bottom: "data_h7_w3/reshape"
+  bottom: "data_h7_w4/reshape"
+  bottom: "data_h7_w5/reshape"
+  bottom: "data_h7_w6/reshape"
+  bottom: "data_h7_w7/reshape"
+  bottom: "data_h7_w8/reshape"
+  bottom: "data_h7_w9/reshape"
+  bottom: "data_h7_w10/reshape"
+  bottom: "data_h7_w11/reshape"
+  bottom: "data_h7_w12/reshape"
+  bottom: "data_h7_w13/reshape"
+  bottom: "data_h7_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h8"
+  type: "Concat"
+  top: "concat_h8"
+  bottom: "data_h8_w1/reshape"
+  bottom: "data_h8_w2/reshape"
+  bottom: "data_h8_w3/reshape"
+  bottom: "data_h8_w4/reshape"
+  bottom: "data_h8_w5/reshape"
+  bottom: "data_h8_w6/reshape"
+  bottom: "data_h8_w7/reshape"
+  bottom: "data_h8_w8/reshape"
+  bottom: "data_h8_w9/reshape"
+  bottom: "data_h8_w10/reshape"
+  bottom: "data_h8_w11/reshape"
+  bottom: "data_h8_w12/reshape"
+  bottom: "data_h8_w13/reshape"
+  bottom: "data_h8_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h9"
+  type: "Concat"
+  top: "concat_h9"
+  bottom: "data_h9_w1/reshape"
+  bottom: "data_h9_w2/reshape"
+  bottom: "data_h9_w3/reshape"
+  bottom: "data_h9_w4/reshape"
+  bottom: "data_h9_w5/reshape"
+  bottom: "data_h9_w6/reshape"
+  bottom: "data_h9_w7/reshape"
+  bottom: "data_h9_w8/reshape"
+  bottom: "data_h9_w9/reshape"
+  bottom: "data_h9_w10/reshape"
+  bottom: "data_h9_w11/reshape"
+  bottom: "data_h9_w12/reshape"
+  bottom: "data_h9_w13/reshape"
+  bottom: "data_h9_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h10"
+  type: "Concat"
+  top: "concat_h10"
+  bottom: "data_h10_w1/reshape"
+  bottom: "data_h10_w2/reshape"
+  bottom: "data_h10_w3/reshape"
+  bottom: "data_h10_w4/reshape"
+  bottom: "data_h10_w5/reshape"
+  bottom: "data_h10_w6/reshape"
+  bottom: "data_h10_w7/reshape"
+  bottom: "data_h10_w8/reshape"
+  bottom: "data_h10_w9/reshape"
+  bottom: "data_h10_w10/reshape"
+  bottom: "data_h10_w11/reshape"
+  bottom: "data_h10_w12/reshape"
+  bottom: "data_h10_w13/reshape"
+  bottom: "data_h10_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h11"
+  type: "Concat"
+  top: "concat_h11"
+  bottom: "data_h11_w1/reshape"
+  bottom: "data_h11_w2/reshape"
+  bottom: "data_h11_w3/reshape"
+  bottom: "data_h11_w4/reshape"
+  bottom: "data_h11_w5/reshape"
+  bottom: "data_h11_w6/reshape"
+  bottom: "data_h11_w7/reshape"
+  bottom: "data_h11_w8/reshape"
+  bottom: "data_h11_w9/reshape"
+  bottom: "data_h11_w10/reshape"
+  bottom: "data_h11_w11/reshape"
+  bottom: "data_h11_w12/reshape"
+  bottom: "data_h11_w13/reshape"
+  bottom: "data_h11_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h12"
+  type: "Concat"
+  top: "concat_h12"
+  bottom: "data_h12_w1/reshape"
+  bottom: "data_h12_w2/reshape"
+  bottom: "data_h12_w3/reshape"
+  bottom: "data_h12_w4/reshape"
+  bottom: "data_h12_w5/reshape"
+  bottom: "data_h12_w6/reshape"
+  bottom: "data_h12_w7/reshape"
+  bottom: "data_h12_w8/reshape"
+  bottom: "data_h12_w9/reshape"
+  bottom: "data_h12_w10/reshape"
+  bottom: "data_h12_w11/reshape"
+  bottom: "data_h12_w12/reshape"
+  bottom: "data_h12_w13/reshape"
+  bottom: "data_h12_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h13"
+  type: "Concat"
+  top: "concat_h13"
+  bottom: "data_h13_w1/reshape"
+  bottom: "data_h13_w2/reshape"
+  bottom: "data_h13_w3/reshape"
+  bottom: "data_h13_w4/reshape"
+  bottom: "data_h13_w5/reshape"
+  bottom: "data_h13_w6/reshape"
+  bottom: "data_h13_w7/reshape"
+  bottom: "data_h13_w8/reshape"
+  bottom: "data_h13_w9/reshape"
+  bottom: "data_h13_w10/reshape"
+  bottom: "data_h13_w11/reshape"
+  bottom: "data_h13_w12/reshape"
+  bottom: "data_h13_w13/reshape"
+  bottom: "data_h13_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat_h14"
+  type: "Concat"
+  top: "concat_h14"
+  bottom: "data_h14_w1/reshape"
+  bottom: "data_h14_w2/reshape"
+  bottom: "data_h14_w3/reshape"
+  bottom: "data_h14_w4/reshape"
+  bottom: "data_h14_w5/reshape"
+  bottom: "data_h14_w6/reshape"
+  bottom: "data_h14_w7/reshape"
+  bottom: "data_h14_w8/reshape"
+  bottom: "data_h14_w9/reshape"
+  bottom: "data_h14_w10/reshape"
+  bottom: "data_h14_w11/reshape"
+  bottom: "data_h14_w12/reshape"
+  bottom: "data_h14_w13/reshape"
+  bottom: "data_h14_w14/reshape"
+  concat_param {
+    axis: 3
+  }
+}
+layer {
+  name: "concat0"
+  type: "Concat"
+  top: "concat0"
+  bottom: "concat_h1"
+  bottom: "concat_h2"
+  bottom: "concat_h3"
+  bottom: "concat_h4"
+  bottom: "concat_h5"
+  bottom: "concat_h6"
+  bottom: "concat_h7"
+  bottom: "concat_h8"
+  bottom: "concat_h9"
+  bottom: "concat_h10"
+  bottom: "concat_h11"
+  bottom: "concat_h12"
+  bottom: "concat_h13"
+  bottom: "concat_h14"
+  concat_param {
+    axis: 2
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "concat0"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 100 # should be the same with LSTM num_output
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "3d_grid_lstm_2" 
+  type: "ThreeDGridLSTM"
+  bottom: "conv1"
+  top: "3d_grid_lstm_2/h"
+  top: "3d_grid_lstm_2/c"
+  grid_param {
+    num_output: 100
+    priority: true
+    prop_direction: H_INC_W_INC
+  }
+}
+layer {
+  name: "3d_grid_lstm_3"
+  type: "ThreeDGridLSTM"
+  bottom: "3d_grid_lstm_2/h"
+  bottom: "3d_grid_lstm_2/c"
+  top: "3d_grid_lstm_3/h"
+  top: "3d_grid_lstm_3/c"
+  grid_param {
+    num_output: 100
+    priority: true
+    prop_direction: H_INC_W_DEC
+  }
+}
+layer {
+  name: "3d_grid_lstm_4"
+  type: "ThreeDGridLSTM"
+  bottom: "3d_grid_lstm_3/h"
+  bottom: "3d_grid_lstm_3/c"
+  top: "3d_grid_lstm_4/h"
+  top: "3d_grid_lstm_4/c"
+  grid_param {
+    num_output: 100
+    priority: true
+    prop_direction: H_DEC_W_DEC
+  }
+}
+layer {
+  name: "3d_grid_lstm_5"
+  type: "ThreeDGridLSTM"
+  bottom: "3d_grid_lstm_4/h"
+  bottom: "3d_grid_lstm_4/c"
+  top: "3d_grid_lstm_5/h"
+  top: "3d_grid_lstm_5/c"
+  grid_param {
+    num_output: 100
+    priority: true
+    prop_direction: H_DEC_W_INC
+  }
+}
+layer {
+  name: "concat6"
+  type: "Concat"
+  bottom: "3d_grid_lstm_5/h"
+  bottom: "3d_grid_lstm_5/c"
+  top: "concat6"
+  concat_param {
+    axis: 1
+  }
+}
+#layer {
+#  name: "relu6"
+#  type: "ReLU"
+#  bottom: "concat6"
+#  top: "concat6"
+#}
+layer {
+  name: "ip7"
+  type: "InnerProduct"
+  bottom: "concat6"
+  top: "ip7"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "ip7"
+  top: "ip7"
+}
+layer {
+  name: "ip8"
+  type: "InnerProduct"
+  bottom: "ip7"
+  top: "ip8"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "prob"
+  type: "Softmax"
+  bottom: "ip8"
+  top: "prob"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "prob"
+  bottom: "label"
+  top: "accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip8"
+  bottom: "label"
+  top: "loss"
+}
