@@ -254,10 +254,14 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
   //  LayerParameter* c_transform_layer = net_param->add_layer();
   //  c_transform_layer->CopyFrom(conv_layer_param);
   //  c_transform_layer->set_name("d0/d/c_transform");
-  //  c_transform_layer->add_param()->set_name("W_c/d");
-  //  c_transform_layer->add_param()->set_name("b_c/d");
   //  c_transform_layer->add_bottom("d0/d/c");
   //  c_transform_layer->add_top("d0/d/c_transformed");
+  //  ParamSpec* weight = c_transform_layer->add_param();
+  //  weight->CopyFrom(weight_paramspec);
+  //  weight->set_name("W_c/d");
+  //  ParamSpec* bias = c_transform_layer->add_param();
+  //  bias->CopyFrom(bias_paramspec);
+  //  bias->set_name("b_c/d");
   //}
 
   // Slicing h_transformed along height dimension
@@ -429,13 +433,15 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
         h_transform_layer->set_name("h"+this->int_to_str(/*h-1*/this->h_->prev())+"_"+
                                     "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                     "d1"+"/h/h_transformed/d");
-        h_transform_layer->add_param()->set_name("W_h/h/d");
         h_transform_layer->add_bottom("h"+this->int_to_str(/*h-1*/this->h_->prev())+"_"+
                                     "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                     "d1"+"/h/h");
         h_transform_layer->add_top("h"+this->int_to_str(/*h-1*/this->h_->prev())+"_"+
                                    "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                    "d1"+"/h/h_transformed/d");
+        ParamSpec* weight = h_transform_layer->add_param();
+        weight->CopyFrom(weight_paramspec);
+        weight->set_name("W_h/h/d");
       }
 
       // Add inner product layer <h,w-1,d>/w/h_transformed/hw
@@ -446,13 +452,15 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
         h_transform_layer->set_name("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                     "w"+this->int_to_str(/*w-1*/this->w_->prev())+"_"+
                                     "d1"+"/w/h_transformed/hw");
-        h_transform_layer->add_param()->set_name("W_h/w/hw");
         h_transform_layer->add_bottom("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                     "w"+this->int_to_str(/*w-1*/this->w_->prev())+"_"+
                                     "d1"+"/w/h");
         h_transform_layer->add_top("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                    "w"+this->int_to_str(/*w-1*/this->w_->prev())+"_"+
                                    "d1"+"/w/h_transformed/hw");
+        ParamSpec* weight = h_transform_layer->add_param();
+        weight->CopyFrom(weight_paramspec);
+        weight->set_name("W_h/w/hw");
       }
 
       // Add inner product layer <h,w-1,d>/w/h_transformed/d
@@ -463,13 +471,15 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
         h_transform_layer->set_name("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                     "w"+this->int_to_str(/*w-1*/this->w_->prev())+"_"+
                                     "d1"+"/w/h_transformed/d");
-        h_transform_layer->add_param()->set_name("W_h/w/d");
         h_transform_layer->add_bottom("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                     "w"+this->int_to_str(/*w-1*/this->w_->prev())+"_"+
                                     "d1"+"/w/h");
         h_transform_layer->add_top("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                    "w"+this->int_to_str(/*w-1*/this->w_->prev())+"_"+
                                    "d1"+"/w/h_transformed/d");
+        ParamSpec* weight = h_transform_layer->add_param();
+        weight->CopyFrom(weight_paramspec);
+        weight->set_name("W_h/w/d");
       }
 
       // Add elementwise operation layer <h,w,d>/hw/gate_input
@@ -542,13 +552,15 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
       h_transform_layer->set_name("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                   "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                   "d1"+"/h/h_transformed/d");
-      h_transform_layer->add_param()->set_name("W_h/h/d");
       h_transform_layer->add_bottom("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                     "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                     "d1"+"/h/h");
       h_transform_layer->add_top("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                  "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                  "d1"+"/h/h_transformed/d");
+      ParamSpec* weight = h_transform_layer->add_param();
+      weight->CopyFrom(weight_paramspec);
+      weight->set_name("W_h/h/d");
       }
     }
    
@@ -586,13 +598,15 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
         h_transform_layer->set_name("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                     "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                     "d1"+"/w/h_transformed/d");
-        h_transform_layer->add_param()->set_name("W_h/w/d");
         h_transform_layer->add_bottom("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                       "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                       "d1"+"/w/h");
         h_transform_layer->add_top("h"+this->int_to_str(/*h*/this->h_->val())+"_"+
                                    "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                    "d1"+"/w/h_transformed/d");
+        ParamSpec* weight = h_transform_layer->add_param();
+        weight->CopyFrom(weight_paramspec);
+        weight->set_name("W_h/w/d");
       }
     }
   }
