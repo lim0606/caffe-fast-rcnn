@@ -214,6 +214,12 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
   reshape_layer_param.mutable_reshape_param()->mutable_shape()->add_dim(1);
   reshape_layer_param.mutable_reshape_param()->mutable_shape()->add_dim(1);
 
+  ParamSpec weight_paramspec;
+  weight_paramspec.set_lr_mult(1.0);
+  
+  ParamSpec bias_paramspec;
+  bias_paramspec.set_lr_mult(2.0); 
+
   // Add c0s and h0s in height and width dimension. 
   vector<BlobShape> input_shapes;
   RecurrentInputShapes(&input_shapes);
@@ -232,10 +238,14 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
     LayerParameter* h_transform_layer = net_param->add_layer();
     h_transform_layer->CopyFrom(biased_conv_layer_param);
     h_transform_layer->set_name("d0/d/h_transformed");
-    h_transform_layer->add_param()->set_name("W_h/d");
-    h_transform_layer->add_param()->set_name("b_h/d");
     h_transform_layer->add_bottom("d0/d/h");
     h_transform_layer->add_top("d0/d/h_transformed");
+    ParamSpec* weight = h_transform_layer->add_param(); 
+    weight->CopyFrom(weight_paramspec); 
+    weight->set_name("W_h/d");
+    ParamSpec* bias = h_transform_layer->add_param();
+    bias->CopyFrom(bias_paramspec);
+    bias->set_name("b_h/d");
   }
 
   //// Add layer to transform input hidden c to the transformed dimension.
@@ -400,13 +410,15 @@ void ThreeDGridLSTMLayer<Dtype>::FillUnrolledNet(NetParameter* net_param) const 
         h_transform_layer->set_name("h"+this->int_to_str(/*h-1*/this->h_->prev())+"_"+
                                     "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                     "d1"+"/h/h_transformed/hw");
-        h_transform_layer->add_param()->set_name("W_h/h/hw");
         h_transform_layer->add_bottom("h"+this->int_to_str(/*h-1*/this->h_->prev())+"_"+
                                     "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                     "d1"+"/h/h");
         h_transform_layer->add_top("h"+this->int_to_str(/*h-1*/this->h_->prev())+"_"+
                                    "w"+this->int_to_str(/*w*/this->w_->val())+"_"+
                                    "d1"+"/h/h_transformed/hw");
+        ParamSpec* weight = h_transform_layer->add_param();
+        weight->CopyFrom(weight_paramspec);
+        weight->set_name("W_h/h/hw");
       }
       
       // Add inner product layer <h-1,w,d>/h/h_transformed/d

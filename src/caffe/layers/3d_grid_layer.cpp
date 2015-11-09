@@ -184,25 +184,6 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   }
   this->param_propagate_down_.clear();
   this->param_propagate_down_.resize(this->blobs_.size(), true);
-
-  //// Set the diffs of recurrent outputs to 0 -- we can't backpropagate across
-  //// batches.
-  //for (int i = 0; i < recur_output_blobs_.size(); ++i) {
-  //  caffe_set(recur_output_blobs_[i]->count(), Dtype(0),
-  //            recur_output_blobs_[i]->mutable_cpu_diff());
-  //}
-
-  // Set the recurrent inputs to 0 -- dummy 
-  vector<BlobShape> recur_input_shapes;
-  RecurrentInputShapes(&recur_input_shapes);
-  CHECK_EQ(recur_input_shapes.size(), (this->height_ + this->width_) * 2) << "In current implementation, RecurrentInputShapes should provide the shape of recurrent input c0 and h0, having zeros, in height and width dimension. ";
-  this->blobs_.resize(1);  
-  this->blobs_[0]->Reshape(recur_input_shapes[0]);
-  caffe_set(this->blobs_[0]->count(), Dtype(0),
-            this->blobs_[0]->mutable_cpu_data());
-  caffe_set(this->blobs_[0]->count(), Dtype(0),
-            this->blobs_[0]->mutable_cpu_diff());
-
 }
 
 template <typename Dtype>

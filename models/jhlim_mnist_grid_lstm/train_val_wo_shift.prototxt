@@ -12,7 +12,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
+    source: "/home/nvidia/github/caffe-fast-rcnn/models/jhlim_mnist_grid_lstm/mnist_train_lmdb"
     batch_size: 64
     shuffle: true
     backend: LMDB
@@ -30,7 +30,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "/home/nvidia/github/caffe-fast-rcnn-grid-lstm/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
+    source: "/home/nvidia/github/caffe-fast-rcnn/models/jhlim_mnist_grid_lstm/mnist_test_lmdb"
     batch_size: 64
     backend: LMDB
   }
@@ -3669,12 +3669,6 @@ layer {
   bottom: "conv1"
   top: "3d_grid_lstm_2/h"
   top: "3d_grid_lstm_2/c"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
   grid_param {
     num_output: 100
     priority: true
@@ -3694,12 +3688,6 @@ layer {
   bottom: "3d_grid_lstm_2/c"
   top: "3d_grid_lstm_3/h"
   top: "3d_grid_lstm_3/c"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
   grid_param {
     num_output: 100
     priority: true
@@ -3719,12 +3707,6 @@ layer {
   bottom: "3d_grid_lstm_3/c"
   top: "3d_grid_lstm_4/h"
   top: "3d_grid_lstm_4/c"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
   grid_param {
     num_output: 100
     priority: true
@@ -3744,12 +3726,6 @@ layer {
   bottom: "3d_grid_lstm_4/c"
   top: "3d_grid_lstm_5/h"
   top: "3d_grid_lstm_5/c"
-  param {
-    lr_mult: 1
-  }
-  param {
-    lr_mult: 2
-  }
   grid_param {
     num_output: 100
     priority: true
