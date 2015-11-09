@@ -68,13 +68,13 @@ int main(int argc, char** argv) {
   FLAGS_alsologtostderr = 1;
   // Usage message.
   gflags::SetUsageMessage("\n"
-      "usage: predict_bn <args>\n\n");
+      "usage: test_bn <args>\n\n");
   // Run tool or show usage.
   caffe::GlobalInit(&argc, &argv);
-  if (argc == 2) {
+  if (argc == 5) {
     //return GetBrewFunction(caffe::string(argv[1]))();
   } else {
-    gflags::ShowUsageWithFlagsRestrict(argv[0], "tools/predict_bn");
+    gflags::ShowUsageWithFlagsRestrict(argv[0], "tools/test_bn");
   }
 
 //  // label (open label txt for label names)
@@ -294,8 +294,7 @@ int main(int argc, char** argv) {
   LOG(INFO) << "Estimate batch norm and variance from training data for inference!"; 
   for (int i = 0; i < iterations; ++i) {
     //LOG(INFO) << "iter: " << i; 
-    const vector<Blob<float>*>& result =
-        caffe_net.ForwardPrefilled();
+    caffe_net.ForwardPrefilled();
     //LOG(INFO) << "wtf1111"; 
     // batch normalization for each BNLayer
     for (int k = 0; k < num_bn_layers; ++k) {
@@ -556,58 +555,47 @@ int main(int argc, char** argv) {
 
 //  // Write predction probability to txt file
 //  FILE *prediction_file;
-//  prediction_file = fopen(FLAGS_outfile.c_str(), "w"); 
+//  prediction_file = fopen(FLAGS_outfile.c_str(), "w");
 //  if (!prediction_file) {
 //    printf("Please specify the label list file. For example, prediction.txt.\n");
-//    return 0;  
+//    return 0;
 //  }
-//  
+//
 //  //printf("# of iterations: %d\n", FLAGS_iterations);
-//  LOG(INFO) << "Start prediction"; 
-//  /*int*/ img_idx = 0, img_processed_idx = 0;  
+//  LOG(INFO) << "Start prediction";
+//  LOG(INFO) << "target_blob (to be printed): " << FLAGS_target_blob;
+//  /*int*/ img_idx = 0, img_processed_idx = 0;
 //  for (int i = 0; i < iterations; ++i) {
-//    //printf("iter: %d\n", i); 
-//    const vector<Blob<float>*>& result =
-//        caffe_test_net.ForwardPrefilled();
-//    const vector<int>& result_indices = caffe_test_net.output_blob_indices();
-//    
-//    //printf("result.size(): %d\n", (int)result.size()); 
-//    //for (int k = 0; k < result.size(); ++k) {
-//    //  printf("blob index: %d\n", result_indices[k]); 
-//    //}
-//    int label_idx = -1, prob_idx = -1; 
-//    label_idx = result_indices[0] < result_indices[1] ? 0 : 1;
-//    prob_idx = result_indices[0] < result_indices[1] ? 1 : 0; 
+//    //printf("iter: %d\n", i);
+//    caffe_test_net.ForwardPrefilled();
+//    const Blob<float>* label = CHECK_NOTNULL(caffe_test_net.blob_by_name("label").get());
+//    const Blob<float>* prob = CHECK_NOTNULL(caffe_test_net.blob_by_name(FLAGS_target_blob).get());
+//    CHECK_EQ(prob->shape(0), label->shape(0));
+//    CHECK_EQ(prob->shape(1), num_classes);
+//    int batchsize = prob->shape(0);
+//    //int num_classes = prob->shape(1);
+//    //printf("batchsize: %d, num_classes: %d\n", batchsize, num_classes);
 //
-//    // data label (in here -1 for all data, since it is unlabeled data)
-//    int batchsize = result[label_idx]->count(); 
-//    //printf("batchsize: %d, num_classes: %d\n", batchsize, num_classes); 
-//    //printf("result[0][0]: %.3f", result_vec[0]);
-//    //for (int j = 1; j < batchsize; ++j){
-//    //  printf(", result[0][%d]: %.3f", result_vec[j]); 
-//    //} 
-//    //printf("\n"); 
-//
-//    // prediction probs num_classes x batchsize 
-//    const float* prob_vec = result[prob_idx]->cpu_data(); 
+//    // prediction probs num_classes x batchsize
+//    const float* prob_vec = prob->cpu_data();
 //    for (int j = 0; j < batchsize; ++j){
 //      if (img_idx < numdata) {
-//        fprintf(prediction_file, "%e", prob_vec[j*num_classes]); 
+//        fprintf(prediction_file, "%e", prob_vec[j*num_classes]);
 //        for (int k = 1; k < num_classes; ++k) {
-//          fprintf(prediction_file, ",%e", prob_vec[j*num_classes+k]); 
+//          fprintf(prediction_file, ",%e", prob_vec[j*num_classes+k]);
 //        }
-//        fprintf(prediction_file, "\n"); 
+//        fprintf(prediction_file, "\n");
 //        ++img_processed_idx;
 //      }
 //      ++img_idx;
-//    }    
+//    }
 //    if (i % (int)(0.1*iterations) == 0) {
-//      LOG(INFO) << (float)i / (float)iterations * 100 << "%"; 
+//      LOG(INFO) << (float)i / (float)iterations * 100 << "%";
 //    }
 //  }
-//  LOG(INFO) << "100%"; 
+//  LOG(INFO) << "100%";
 //  LOG(INFO) << "# of imgs (read): " << img_idx << ", # of imgs (processed): " << img_processed_idx;
-//  fclose(prediction_file); 
+//  fclose(prediction_file);
 
   return 0; 
 }

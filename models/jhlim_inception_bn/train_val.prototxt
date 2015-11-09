@@ -7,7 +7,7 @@ layer {
   name: "data"
   type: "Data"
   data_param {
-    source: "/home/nvidia/data/ilsvrc12/ilsvrc12_train_lmdb"
+    source: "/media/data1/image/ilsvrc12/ilsvrc12_train_lmdb"
     batch_size: 32
     backend: LMDB
     shuffle: true
@@ -18,7 +18,7 @@ layer {
   transform_param {
     mirror: true
     crop_size: 224
-    mean_file: "/home/nvidia/data/ilsvrc12/imagenet_mean.binaryproto"
+    mean_file: "/media/data1/image/ilsvrc12/imagenet_mean.binaryproto"
     #mean_value: 104
     #mean_value: 117
     #mean_value: 123
@@ -31,7 +31,7 @@ layer {
   name: "data"
   type: "Data"
   data_param {
-    source: "/home/nvidia/data/ilsvrc12/ilsvrc12_val_lmdb"
+    source: "/media/data1/image/ilsvrc12/ilsvrc12_val_lmdb"
     batch_size: 32
     backend: LMDB
   }
@@ -41,7 +41,7 @@ layer {
   transform_param {
     mirror: false
     crop_size: 224
-    mean_file: "/home/nvidia/data/ilsvrc12/imagenet_mean.binaryproto"
+    mean_file: "/media/data1/image/ilsvrc12/imagenet_mean.binaryproto"
   }
 }
 layer {
@@ -1746,6 +1746,15 @@ layer {
 }
 layer {
   bottom: "loss1/classifier"
+  top: "loss1/prob"
+  name: "loss1/prob"
+  type: "Softmax"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  bottom: "loss1/prob"
   bottom: "label"
   top: "loss1/top-1"
   name: "loss1/top-1"
@@ -1755,7 +1764,7 @@ layer {
   }
 }
 layer {
-  bottom: "loss1/classifier"
+  bottom: "loss1/prob"
   bottom: "label"
   top: "loss1/top-5"
   name: "loss1/top-5"
@@ -3027,6 +3036,15 @@ layer {
 }
 layer {
   bottom: "loss2/classifier"
+  top: "loss2/prob"
+  name: "loss2/prob"
+  type: "Softmax"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  bottom: "loss2/prob"
   bottom: "label"
   top: "loss2/top-1"
   name: "loss2/top-1"
@@ -3036,7 +3054,7 @@ layer {
   }
 }
 layer {
-  bottom: "loss2/classifier"
+  bottom: "loss2/prob"
   bottom: "label"
   top: "loss2/top-5"
   name: "loss2/top-5"
@@ -4109,6 +4127,15 @@ layer {
 }
 layer {
   bottom: "loss3/classifier"
+  top: "loss3/prob"
+  name: "loss3/prob"
+  type: "Softmax"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  bottom: "loss3/prob"
   bottom: "label"
   top: "loss3/top-1"
   name: "loss3/top-1"
@@ -4118,7 +4145,7 @@ layer {
   }
 }
 layer {
-  bottom: "loss3/classifier"
+  bottom: "loss3/prob"
   bottom: "label"
   top: "loss3/top-5"
   name: "loss3/top-5"
