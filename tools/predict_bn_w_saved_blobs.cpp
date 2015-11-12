@@ -66,6 +66,8 @@ DEFINE_string(outfile, "",
     "The text file including prediction probabilities.");
 DEFINE_string(target_blob, "prob",
     "The name of blob you want to print out.");
+DEFINE_string(savefolder, "",
+    "The folder path that batch mean and batch variance should be stored.");
 
 std::string int_to_str(const int t) {
   std::ostringstream num;
@@ -520,14 +522,14 @@ int main(int argc, char** argv) {
  
   for (int k = 0; k < num_bn_layers; ++k) {
     {
-    std::string blob_filename("tmp/batch_mean_"+int_to_str(k)+".caffemodel"); 
+    std::string blob_filename(FLAGS_savefolder+"/batch_mean_"+int_to_str(k)+".caffemodel"); 
     caffe::BlobProto blob;
     ReadProtoFromBinaryFile(blob_filename, &blob); 
     batch_mean_vecs[k].reset(new Blob<float>(1, 1, 1, 1)); 
     batch_mean_vecs[k]->FromProto(blob, true);
     }
     {
-    std::string blob_filename("tmp/batch_var_"+int_to_str(k)+".caffemodel");
+    std::string blob_filename(FLAGS_savefolder+"/batch_var_"+int_to_str(k)+".caffemodel");
     caffe::BlobProto blob;
     ReadProtoFromBinaryFile(blob_filename, &blob);  
     batch_variance_vecs[k].reset(new Blob<float>(1, 1, 1, 1)); 

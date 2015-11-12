@@ -64,6 +64,8 @@ DEFINE_int32(train_iterations, 0,
 //    "The text file having labels and their corresponding indices.");
 //DEFINE_string(outfile, "",
 //    "The text file including prediction probabilities.");
+DEFINE_string(savefolder, "",
+    "The folder path that batch mean and batch variance should be stored.");
 
 std::string int_to_str(const int t) {
   std::ostringstream num;
@@ -397,13 +399,13 @@ int main(int argc, char** argv) {
    */
   for (int k = 0; k < num_bn_layers; ++k) {
     {
-    std::string blob_filename("tmp/batch_mean_"+int_to_str(k)+".caffemodel"); 
+    std::string blob_filename(FLAGS_savefolder+"/batch_mean_"+int_to_str(k)+".caffemodel"); 
     caffe::BlobProto blob; 
     batch_mean_vecs[k]->ToProto(&blob, false);
     WriteProtoToBinaryFile(blob, blob_filename);
     }
     {
-    std::string blob_filename("tmp/batch_var_"+int_to_str(k)+".caffemodel");
+    std::string blob_filename(FLAGS_savefolder+"/batch_var_"+int_to_str(k)+".caffemodel");
     caffe::BlobProto blob;
     batch_variance_vecs[k]->ToProto(&blob, false);
     WriteProtoToBinaryFile(blob, blob_filename);

@@ -8,5 +8,6 @@ WEIGHT=/media/data1/pretrained_nets/inception_bn_ilsvrc12/shuni/inception_bn_ste
 LABEL_LIST=/media/data1/image/ilsvrc12/labellist.txt
 OUTFILE=inception_bn_prob.txt
 TARGET_BLOB_NAME=loss3/prob
+SAVEFOLDER=shuni
 
-$CAFFE_ROOT/build/tools/predict_bn_w_saved_blobs -test_model $TEST_MODEL -weights $WEIGHT -labellist $LABEL_LIST -outfile $OUTFILE -target_blob $TARGET_BLOB_NAME -gpu 0 
+$CAFFE_ROOT/build/tools/predict_bn_w_saved_blobs -test_model $TEST_MODEL -weights $WEIGHT -labellist $LABEL_LIST -outfile $OUTFILE -target_blob $TARGET_BLOB_NAME -savefolder $SAVEFOLDER -gpu 0 
