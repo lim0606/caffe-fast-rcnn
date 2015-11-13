@@ -256,6 +256,39 @@ class HDF5OutputLayer : public Layer<Dtype> {
  * TODO(dox): thorough documentation for Forward and proto params.
  */
 template <typename Dtype>
+class ProbDataLayer : public BasePrefetchingDataLayer<Dtype> {
+ public:
+  explicit ProbDataLayer(const LayerParameter& param)
+      : BasePrefetchingDataLayer<Dtype>(param) {}
+  virtual ~ProbDataLayer();
+  virtual void DataLayerSetUp(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+
+  virtual inline const char* type() const { return "ProbData"; }
+  virtual inline int ExactNumBottomBlobs() const { return 0; }
+  virtual inline int ExactNumTopBlobs() const { return 2; }
+
+ protected:
+  shared_ptr<Caffe::RNG> prefetch_rng_;
+  //virtual void ShuffleProbs();
+  virtual vector<Dtype> ReadProbs(int line_id);
+  virtual void load_batch(Batch<Dtype>* batch);
+
+  Blob<float> data_;
+  Blob<float> label_;
+
+  //vector<std::pair<std::string, int> > lines_;
+  int lines_id_;
+  int num_data_;
+  int num_classes_;  
+};
+
+/**
+ * @brief Provides data to the Net from image files.
+ *
+ * TODO(dox): thorough documentation for Forward and proto params.
+ */
+template <typename Dtype>
 class ImageDataLayer : public BasePrefetchingDataLayer<Dtype> {
  public:
   explicit ImageDataLayer(const LayerParameter& param)

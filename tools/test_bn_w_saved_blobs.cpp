@@ -64,6 +64,8 @@ DEFINE_string(weights, "",
 //    "The text file having labels and their corresponding indices.");
 //DEFINE_string(outfile, "",
 //    "The text file including prediction probabilities.");
+//DEFINE_string(target_blob, "prob",
+//    "The name of blob you want to print out.");
 DEFINE_string(savefolder, "",
     "The folder path that batch mean and batch variance should be stored.");
 

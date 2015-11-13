@@ -51,23 +51,21 @@ DEFINE_string(test_model, "",
     "The model definition protocol buffer text file..");
 //DEFINE_string(snapshot, "",
 //    "The snapshot solver state to resume training.");
-DEFINE_string(weights, "",
-    "The pretrained weights to initialize finetuning. "
-    "Cannot be set simultaneously with snapshot.");
+//DEFINE_string(weights, "",
+//    "The pretrained weights to initialize finetuning. "
+//    "Cannot be set simultaneously with snapshot.");
 //DEFINE_int32(train_iterations, 0,
 //    "The number of iterations to run.");
 //DEFINE_int32(numdata, 0,
 //    "The total number of test data. (you should specify in this implementation)."); 
 //DEFINE_int32(batchsize, 0,
 //    "The batchsize. (you should specify in this implementation)."); 
-DEFINE_string(labellist, "",
-    "The text file having labels and their corresponding indices.");
-DEFINE_string(outfile, "",
-    "The text file including prediction probabilities.");
-DEFINE_string(target_blob, "prob",
-    "The name of blob you want to print out.");
-DEFINE_string(savefolder, "",
-    "The folder path that batch mean and batch variance should be stored.");
+//DEFINE_string(labellist, "",
+//    "The text file having labels and their corresponding indices.");
+//DEFINE_string(outfile, "",
+//    "The text file including prediction probabilities.");
+//DEFINE_string(savefolder, "",
+//    "The folder path that batch mean and batch variance should be stored.");
 
 std::string int_to_str(const int t) {
   std::ostringstream num;
@@ -89,30 +87,30 @@ int main(int argc, char** argv) {
     gflags::ShowUsageWithFlagsRestrict(argv[0], "tools/save_bn");
   }
 
-  // label (open label txt for label names)
-  std::ifstream label_file;
-  label_file.open(FLAGS_labellist.c_str());
-  if(!label_file) {
-    printf("Please specify the label list file. For example, ndsb_labels.txt.\n"); 
-    return 0;  
-  }
-  std::vector< std::string > label_names;
-  std::vector< int > label_indices;
-  std::string label_name;
-  int label_index; 
-  int num_classes;
-  while(label_file >> label_index >> label_name) {
-    //printf("label_index: %d, label_name: %s\n", label_index, label_name.c_str()); 
-    label_names.push_back(label_name); 
-    label_indices.push_back(label_index); 
-  }
-  num_classes = label_indices.size(); 
-  printf("# of classes : %d\n", num_classes); 
+//  // label (open label txt for label names)
+//  std::ifstream label_file;
+//  label_file.open(FLAGS_labellist.c_str());
+//  if(!label_file) {
+//    printf("Please specify the label list file. For example, ndsb_labels.txt.\n"); 
+//    return 0;  
+//  }
+//  std::vector< std::string > label_names;
+//  std::vector< int > label_indices;
+//  std::string label_name;
+//  int label_index; 
+//  int num_classes;
+//  while(label_file >> label_index >> label_name) {
+//    //printf("label_index: %d, label_name: %s\n", label_index, label_name.c_str()); 
+//    label_names.push_back(label_name); 
+//    label_indices.push_back(label_index); 
+//  }
+//  num_classes = label_indices.size(); 
+//  printf("# of classes : %d\n", num_classes); 
 
   //
   //CHECK_GT(FLAGS_train_model.size(), 0) << "Need a train model definition to do preprosessing.";
   CHECK_GT(FLAGS_test_model.size(), 0) << "Need a test model definition to predict.";
-  CHECK_GT(FLAGS_weights.size(), 0) << "Need model weights to predict.";
+  //CHECK_GT(FLAGS_weights.size(), 0) << "Need model weights to predict.";
 
   // Set device id and mode
   if (FLAGS_gpu >= 0) {
@@ -404,7 +402,7 @@ int main(int argc, char** argv) {
   //ReadNetParamsFromTextFileOrDie(FLAGS_test_model, &param);
   //caffe_net.Init(param);
   //caffe_net.CopyTrainedLayersFrom(FLAGS_weights);
-  caffe_test_net.CopyTrainedLayersFrom(FLAGS_weights); 
+  //caffe_test_net.CopyTrainedLayersFrom(FLAGS_weights); 
 
   // Calculate iterations
   int iterations = -1, numdata = -1, batchsize = -1;
@@ -455,6 +453,33 @@ int main(int argc, char** argv) {
       //printf("%u\n", number_of_lines);
       numdata = (int)number_of_lines; 
     }
+    else if (test_layers[0]->layer_param().type() == "ProbData") { 
+      batchsize = test_layers[0]->layer_param().prob_data_param().batch_size();
+      LOG(INFO) << "batch_size: " << batchsize;
+
+      // Read proto for test
+      caffe::BlobProtoVector blob_proto_vec_tmp;
+      blob_proto_vec_tmp.Clear();
+      ReadProtoFromBinaryFile(test_layers[0]->layer_param().prob_data_param().source(), &blob_proto_vec_tmp);
+    
+      const caffe::BlobProto& blob_proto_prob = blob_proto_vec_tmp.blobs(0);
+      const caffe::BlobProto& blob_proto_label = blob_proto_vec_tmp.blobs(1);
+    
+      Blob<float> output_blob_prob_tmp(1, 1, 1, 1);
+      Blob<float> output_blob_label_tmp(1, 1, 1, 1);
+    
+      output_blob_prob_tmp.FromProto(blob_proto_prob, true);
+      output_blob_label_tmp.FromProto(blob_proto_label, true);
+    
+      //float* output_blob_prob_data = output_blob_prob_tmp.mutable_cpu_data();
+      //float* output_blob_label_data = output_blob_label_tmp.mutable_cpu_data();
+    
+      numdata = output_blob_prob_tmp.shape(0);
+      //int num_classes = output_blob_prob_tmp.shape(1);
+    
+      LOG(INFO) << "numdata: " << numdata;
+      //LOG(INFO) << "num_classes: " << num_classes;
+    }
     //case 43: { // IMAGE_DATA_AFFINE
     //  batchsize = test_layers[0]->layer_param().image_data_affine_param().batch_size();
     //  LOG(INFO) << "batch_size: " << batchsize;
@@ -499,193 +524,92 @@ int main(int argc, char** argv) {
   LOG(INFO) << "# of iterations " << iterations; 
   //LOG(INFO) << "Running for " << FLAGS_iterations << " iterations.";
 
-  int num_bn_layers = 0; 
-  vector<int> bn_layers;
-  bn_layers.resize(0);
-  for (int i = 0; i < test_layers.size(); ++i) {
-    if ("BN" == test_layers[i]->layer_param().type()) {
-      bn_layers.push_back(i);
-      LOG(INFO) << std::setfill(' ') << std::setw(10) << test_layers[i]->layer_param().name() << " (" << bn_layers[num_bn_layers]+1 << " th layer)";
-      num_bn_layers++;
-    }
-  }
-
-  /**
-   * Load batch_mean and batch_variance
-   */
-
-  vector<shared_ptr<Blob<float> > > batch_mean_vecs,
-                                    batch_variance_vecs;
-
-  batch_mean_vecs.resize(num_bn_layers); 
-  batch_variance_vecs.resize(num_bn_layers);
- 
-  for (int k = 0; k < num_bn_layers; ++k) {
-    {
-    std::string blob_filename(FLAGS_savefolder+"/batch_mean_"+int_to_str(k)+".caffemodel"); 
-    caffe::BlobProto blob;
-    ReadProtoFromBinaryFile(blob_filename, &blob); 
-    batch_mean_vecs[k].reset(new Blob<float>(1, 1, 1, 1)); 
-    batch_mean_vecs[k]->FromProto(blob, true);
-    }
-    {
-    std::string blob_filename(FLAGS_savefolder+"/batch_var_"+int_to_str(k)+".caffemodel");
-    caffe::BlobProto blob;
-    ReadProtoFromBinaryFile(blob_filename, &blob);  
-    batch_variance_vecs[k].reset(new Blob<float>(1, 1, 1, 1)); 
-    batch_variance_vecs[k]->FromProto(blob, true);
-    }
-  }
-  LOG(INFO) << "Loaded batch_mean and batch_variance for " << FLAGS_weights; 
-
-  ////////////assigning batch mean and batch variance. 
-  for (int k = 0; k < num_bn_layers; ++k) {
-    const shared_ptr<BNLayer<float> > layer = 
-        dynamic_pointer_cast<BNLayer<float> >(test_layers[bn_layers[k]]);  
-    layer->set_batch_mean_and_batch_variance(
-        *batch_mean_vecs[k].get(), *batch_variance_vecs[k].get());
-    //Blob<float>& batch_mean_tmp = layer->batch_mean(); 
-    //LOG(INFO) << "layer->batch_mean_vecs_.count(): " << batch_mean_tmp.count() 
-    //          << ", batch_mean_vects" << batch_mean_vecs[k]->count();
-  }
-
-//  // Eval test accuracy
-//  vector<Blob<float>* > bottom_vec;
-//  vector<int> test_score_output_id;
-//  vector<float> test_score;
-//  float loss = 0;
-//  for (int i = 0; i < iterations; ++i) {
-//    float iter_loss;
-//    const vector<Blob<float>*>& result =
-//        caffe_test_net.Forward(bottom_vec, &iter_loss);
-//    loss += iter_loss;
-//    int idx = 0;
-//    for (int j = 0; j < result.size(); ++j) {
-//      const float* result_vec = result[j]->cpu_data();
-//      for (int k = 0; k < result[j]->count(); ++k, ++idx) {
-//        const float score = result_vec[k];
-//        if (i == 0) {
-//          test_score.push_back(score);
-//          test_score_output_id.push_back(j);
-//        } else {
-//          test_score[idx] += score;
-//        }
-//        const std::string& output_name = caffe_test_net.blob_names()[
-//            caffe_test_net.output_blob_indices()[j]];
-//        LOG(INFO) << "Batch " << i << ", " << output_name << " = " << score;
-//      }
-//    }
-//  }
-//  loss /= iterations;
-//  LOG(INFO) << "Loss: " << loss;
-//  for (int i = 0; i < test_score.size(); ++i) {
-//    const std::string& output_name = caffe_test_net.blob_names()[
-//        caffe_test_net.output_blob_indices()[test_score_output_id[i]]];
-//    const float loss_weight =
-//        caffe_test_net.blob_loss_weights()[caffe_test_net.output_blob_indices()[i]];
-//    std::ostringstream loss_msg_stream;
-//    const float mean_score = test_score[i] / iterations;
-//    if (loss_weight) {
-//      loss_msg_stream << " (* " << loss_weight
-//                      << " = " << loss_weight * mean_score << " loss)";
-//    }
-//    LOG(INFO) << output_name << " = " << mean_score << loss_msg_stream.str();
-//  }
-
-  // Write predction probability to txt file
-  //FILE *prediction_file;
-  ////prediction_file = fopen(FLAGS_outfile.c_str(), "w");
-  //prediction_file = fopen("tmp.txt", "w");
-  //if (!prediction_file) {
-  //  printf("Please specify the label list file. For example, prediction.txt.\n");
-  //  return 0;
-  //}
-   
-  // init output blob
-  Blob<float> output_blob_prob(numdata, num_classes, 1, 1); 
-  Blob<float> output_blob_label(numdata, 1, 1, 1); 
-
-  float* output_blob_prob_data = output_blob_prob.mutable_cpu_data();
-  float* output_blob_label_data = output_blob_label.mutable_cpu_data();
-
-  //printf("# of iterations: %d\n", FLAGS_iterations);
-  LOG(INFO) << "Start prediction";
-  LOG(INFO) << "target_blob (to be printed): " << FLAGS_target_blob;
-
-  int img_idx = 0, img_processed_idx = 0;
+  // Eval test accuracy
+  vector<Blob<float>* > bottom_vec;
+  vector<int> test_score_output_id;
+  vector<float> test_score;
+  float loss = 0;
   for (int i = 0; i < iterations; ++i) {
-    //printf("iter: %d\n", i);
-    caffe_test_net.ForwardPrefilled();
-    const Blob<float>* label = CHECK_NOTNULL(caffe_test_net.blob_by_name("label").get());
-    const Blob<float>* prob = CHECK_NOTNULL(caffe_test_net.blob_by_name(FLAGS_target_blob).get());
-    CHECK_EQ(prob->shape(0), label->shape(0));
-    CHECK_EQ(prob->shape(1), num_classes);
-    int batchsize = prob->shape(0);
-    //int num_classes = prob->shape(1);
-    //printf("batchsize: %d, num_classes: %d\n", batchsize, num_classes);
-
-    // prediction probs num_classes x batchsize
-    const float* prob_vec = prob->cpu_data();
-    const float* label_vec = label->cpu_data();
-    for (int j = 0; j < batchsize; ++j){
-      if (img_idx < numdata) {
-        //fprintf(prediction_file, "%e", prob_vec[j*num_classes]);
-        output_blob_prob_data[img_processed_idx*num_classes+0] = prob_vec[j*num_classes];
-        for (int k = 1; k < num_classes; ++k) {
-          //fprintf(prediction_file, ",%e", prob_vec[j*num_classes+k]);
-          output_blob_prob_data[img_processed_idx*num_classes+k] = prob_vec[j*num_classes+k];
+    float iter_loss;
+    const vector<Blob<float>*>& result =
+        caffe_test_net.Forward(bottom_vec, &iter_loss);
+    loss += iter_loss;
+    int idx = 0;
+    for (int j = 0; j < result.size(); ++j) {
+      const float* result_vec = result[j]->cpu_data();
+      for (int k = 0; k < result[j]->count(); ++k, ++idx) {
+        const float score = result_vec[k];
+        if (i == 0) {
+          test_score.push_back(score);
+          test_score_output_id.push_back(j);
+        } else {
+          test_score[idx] += score;
         }
-        //fprintf(prediction_file, "\n");
-        output_blob_label_data[img_processed_idx] = (float)label_vec[j];
-        ++img_processed_idx;
+        const std::string& output_name = caffe_test_net.blob_names()[
+            caffe_test_net.output_blob_indices()[j]];
+        LOG(INFO) << "Batch " << i << ", " << output_name << " = " << score;
       }
-      ++img_idx;
-    }
-    if (i % (int)(0.1*iterations) == 0) {
-      LOG(INFO) << (float)i / (float)iterations * 100 << "%";
     }
   }
-  LOG(INFO) << "100%";
-  LOG(INFO) << "# of imgs (read): " << img_idx << ", # of imgs (processed): " << img_processed_idx;
-  //fclose(prediction_file);
+  loss /= iterations;
+  LOG(INFO) << "Loss: " << loss;
+  for (int i = 0; i < test_score.size(); ++i) {
+    const std::string& output_name = caffe_test_net.blob_names()[
+        caffe_test_net.output_blob_indices()[test_score_output_id[i]]];
+    const float loss_weight =
+        caffe_test_net.blob_loss_weights()[caffe_test_net.output_blob_indices()[i]];
+    std::ostringstream loss_msg_stream;
+    const float mean_score = test_score[i] / iterations;
+    if (loss_weight) {
+      loss_msg_stream << " (* " << loss_weight
+                      << " = " << loss_weight * mean_score << " loss)";
+    }
+    LOG(INFO) << output_name << " = " << mean_score << loss_msg_stream.str();
+  }
 
-  caffe::BlobProtoVector blob_proto_vec;
-  blob_proto_vec.Clear();
-  output_blob_prob.ToProto(blob_proto_vec.add_blobs());
-  output_blob_label.ToProto(blob_proto_vec.add_blobs()); 
-  //blob_proto_vec.SerializeToString(&output);
-  WriteProtoToBinaryFile(blob_proto_vec, FLAGS_outfile);
-
-//  // Read proto for test  
-//  caffe::BlobProtoVector blob_proto_vec_tmp;
-//  blob_proto_vec_tmp.Clear();
-//  ReadProtoFromBinaryFile(FLAGS_outfile, &blob_proto_vec_tmp);
-//
-//  const caffe::BlobProto& blob_proto_prob = blob_proto_vec_tmp.blobs(0); 
-//  const caffe::BlobProto& blob_proto_label = blob_proto_vec_tmp.blobs(1);
-//
-//  Blob<float> output_blob_prob_tmp(1, 1, 1, 1); 
-//  Blob<float> output_blob_label_tmp(1, 1, 1, 1); 
-// 
-//  output_blob_prob_tmp.FromProto(blob_proto_prob, true);
-//  output_blob_label_tmp.FromProto(blob_proto_label, true);
-//
-//  /*float**/ output_blob_prob_data = output_blob_prob_tmp.mutable_cpu_data();
-//  /*float**/ output_blob_label_data = output_blob_label_tmp.mutable_cpu_data();
-//
-//  /*int*/ numdata = output_blob_prob_tmp.shape(0); 
-//  /*int*/ num_classes = output_blob_prob_tmp.shape(1);
-//
-//  LOG(INFO) << "numdata: " << numdata;
-//  LOG(INFO) << "num_classes: " << num_classes;
-//
-//  for (int i = 0; i < 1/*numdata*/; ++i) {
-//    printf("%e", output_blob_prob_data[i*num_classes+0]);
-//    for (int j = 1; j < num_classes; ++j) {
-//      printf(",%e", output_blob_prob_data[i*num_classes+j]);
-//    }
-//    printf("\n");  
+//  // Write predction probability to txt file
+//  FILE *prediction_file;
+//  prediction_file = fopen(FLAGS_outfile.c_str(), "w");
+//  if (!prediction_file) {
+//    printf("Please specify the label list file. For example, prediction.txt.\n");
+//    return 0;
 //  }
- 
+//
+//  //printf("# of iterations: %d\n", FLAGS_iterations);
+//  LOG(INFO) << "Start prediction";
+//  LOG(INFO) << "target_blob (to be printed): " << FLAGS_target_blob;
+//  int img_idx = 0, img_processed_idx = 0;
+//  for (int i = 0; i < iterations; ++i) {
+//    //printf("iter: %d\n", i);
+//    caffe_test_net.ForwardPrefilled();
+//    const Blob<float>* label = CHECK_NOTNULL(caffe_test_net.blob_by_name("label").get());
+//    const Blob<float>* prob = CHECK_NOTNULL(caffe_test_net.blob_by_name(FLAGS_target_blob).get());
+//    CHECK_EQ(prob->shape(0), label->shape(0));
+//    CHECK_EQ(prob->shape(1), num_classes);
+//    int batchsize = prob->shape(0);
+//    //int num_classes = prob->shape(1);
+//    //printf("batchsize: %d, num_classes: %d\n", batchsize, num_classes);
+//
+//    // prediction probs num_classes x batchsize
+//    const float* prob_vec = prob->cpu_data();
+//    for (int j = 0; j < batchsize; ++j){
+//      if (img_idx < numdata) {
+//        fprintf(prediction_file, "%e", prob_vec[j*num_classes]);
+//        for (int k = 1; k < num_classes; ++k) {
+//          fprintf(prediction_file, ",%e", prob_vec[j*num_classes+k]);
+//        }
+//        fprintf(prediction_file, "\n");
+//        ++img_processed_idx;
+//      }
+//      ++img_idx;
+//    }
+//    if (i % (int)(0.1*iterations) == 0) {
+//      LOG(INFO) << (float)i / (float)iterations * 100 << "%";
+//    }
+//  }
+//  LOG(INFO) << "100%";
+//  LOG(INFO) << "# of imgs (read): " << img_idx << ", # of imgs (processed): " << img_processed_idx;
+//  fclose(prediction_file);
+
   return 0; 
 }

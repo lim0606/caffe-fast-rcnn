@@ -6,7 +6,7 @@ TEST_MODEL=models/jhlim_inception_bn/train_val.prototxt
 #WEIGHT=models/jhlim_inception_bn/inception_bn_stepsize_6400_iter_1200000.caffemodel
 WEIGHT=/media/data1/pretrained_nets/inception_bn_ilsvrc12/shuni/inception_bn_stepsize_6400_iter_1200000.caffemodel
 LABEL_LIST=/media/data1/image/ilsvrc12/labellist.txt
-OUTFILE=inception_bn_prob.txt
+OUTFILE=inception_bn_prob.caffelmodel
 TARGET_BLOB_NAME=loss3/prob
 SAVEFOLDER=shuni
 
