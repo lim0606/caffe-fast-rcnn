@@ -1,0 +1,38 @@
+# Inception Network (GoogLeNet variant) Batch Normalization
+layer {
+  top: "loss3/prob"
+  top: "label"
+  name: "loss3/prob"
+  type: "ProbData"
+  prob_data_param {
+    source: "/home/jaehyun/github/caffe-fast-rcnn/avg_probs.caffelmodel"
+    batch_size: 32
+  }
+  include {
+    phase: TEST
+  }
+}
+layer {
+  bottom: "loss3/prob"
+  bottom: "label"
+  top: "loss3/top-1"
+  name: "loss3/top-1"
+  type: "Accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  bottom: "loss3/prob"
+  bottom: "label"
+  top: "loss3/top-5"
+  name: "loss3/top-5"
+  type: "Accuracy"
+  accuracy_param {
+    top_k: 5
+  }
+  include {
+    phase: TEST
+  }
+}
+
