@@ -1,8 +1,8 @@
 # Inception Network (GoogLeNet variant) Batch Normalization
 layer {
-  top: "loss3/classifier"
+  top: "avg_probs"
   top: "label"
-  name: "loss3/classifier"
+  name: "avg_probs"
   type: "ProbData"
   prob_data_param {
     source: "/home/jaehyun/github/caffe-fast-rcnn/tmp/avg_probs.caffemodel"
@@ -13,7 +13,7 @@ layer {
   }
 }
 layer {
-  bottom: "loss3/classifier"
+  bottom: "avg_probs"
   top: "loss3/prob"
   name: "loss3/prob"
   type: "Softmax"
@@ -23,25 +23,10 @@ layer {
 }
 layer {
   bottom: "loss3/prob"
-  bottom: "label"
-  top: "loss3/top-1"
-  name: "loss3/top-1"
-  type: "Accuracy"
-  include {
-    phase: TEST
-  }
-}
-layer {
-  bottom: "loss3/prob"
-  bottom: "label"
-  top: "loss3/top-5"
-  name: "loss3/top-5"
-  type: "Accuracy"
-  accuracy_param {
+  top: "loss3/argmax"
+  name: "loss3/argmax"
+  type: "ArgMax"
+  argmax_param {
     top_k: 5
   }
-  include {
-    phase: TEST
-  }
 }
-

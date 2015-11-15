@@ -32,6 +32,8 @@ layer {
   type: "Data"
   data_param {
     source: "/media/data1/image/ilsvrc12/ilsvrc12_val_lmdb"
+    #source: "/media/data1/image/ilsvrc15/ilsvrc15_val_w_12label_lmdb"
+    #source: "/media/data1/image/ilsvrc15/ilsvrc15_test_lmdb"
     batch_size: 32
     backend: LMDB
   }
