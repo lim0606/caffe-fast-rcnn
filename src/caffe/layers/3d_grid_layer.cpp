@@ -89,6 +89,7 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
 
   // Create a NetParameter; setup the inputs that aren't unique to particular
   // recurrent architectures.
+  LOG(INFO) << "Define LSTM NetParameter.";
   NetParameter net_param;
   net_param.set_force_backward(true);
 
@@ -98,6 +99,7 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
  
   // Call the child's FillUnrolledNet implementation to specify the unrolled
   // recurrent architecture.
+  LOG(INFO) << "Unroll net."; 
   this->FillUnrolledNet(&net_param);
 
   // Prepend this layer's name to the names of each layer in the unrolled net.
@@ -109,8 +111,9 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
     }
   }
 
+  LOG(INFO) << "Initialize LSTM Network."; 
   // Create the unrolled net.
-  this->unrolled_net_.reset(new Net<Dtype>(net_param));
+  this->unrolled_net_.reset(new Net<Dtype>(net_param, NULL, true));
   this->unrolled_net_->set_debug_info(this->layer_param_.grid_param().debug_info());
 
   //// Setup pointers to the inputs.
@@ -121,6 +124,7 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   //      CHECK_NOTNULL(this->unrolled_net_->blob_by_name("x_static").get());
   //}
 
+  LOG(INFO) << "Mapping blobs across (original) network with this layer's nested network."; 
   // Setup pointers to paired recurrent inputs/outputs.
   vector<string> recur_input_names;
   RecurrentInputBlobNames(&recur_input_names);
@@ -184,6 +188,7 @@ void ThreeDGridLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   }
   this->param_propagate_down_.clear();
   this->param_propagate_down_.resize(this->blobs_.size(), true);
+  LOG(INFO) << "Initialization done."; 
 }
 
 template <typename Dtype>
@@ -217,14 +222,12 @@ void ThreeDGridLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
 
   vector<BlobShape> recur_input_shapes;
   RecurrentInputShapes(&recur_input_shapes);
-  this->blobs_[0]->Reshape(recur_input_shapes[0]);
+  //this->blobs_[0]->Reshape(recur_input_shapes[0]);
   vector<string> recur_input_names;
   RecurrentInputBlobNames(&recur_input_names);
   CHECK_EQ(recur_input_names.size(), this->recur_input_blobs_.size());
   for (int i = 0; i < recur_input_names.size(); ++i) {
-    this->recur_input_blobs_[i]->ReshapeLike(*(this->blobs_[0]));
-    this->recur_input_blobs_[i]->ShareData(*(this->blobs_[0]));
-    this->recur_input_blobs_[i]->ShareDiff(*(this->blobs_[0]));
+    this->recur_input_blobs_[i]->Reshape(recur_input_shapes[i]);
   }
   this->unrolled_net_->Reshape();
   

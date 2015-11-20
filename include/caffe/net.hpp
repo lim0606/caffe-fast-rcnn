@@ -23,9 +23,10 @@ namespace caffe {
 template <typename Dtype>
 class Net {
  public:
-  explicit Net(const NetParameter& param, const Net* root_net = NULL);
+  explicit Net(const NetParameter& param, const Net* root_net = NULL, const bool is_nested = NULL);
   explicit Net(const string& param_file, Phase phase,
-      const Net* root_net = NULL);
+      const Net* root_net = NULL, 
+      const bool is_nested = NULL);
   virtual ~Net() {}
 
   /// @brief Initialize a network with a NetParameter.
@@ -205,6 +206,8 @@ class Net {
   const shared_ptr<Layer<Dtype> > layer_by_name(const string& layer_name) const;
 
   void set_debug_info(const bool value) { debug_info_ = value; }
+ 
+  inline bool is_nested() const { return is_nested_; }
 
   // Helpers for Init.
   /**
@@ -300,6 +303,9 @@ class Net {
   /// The root net that actually holds the shared layers in data parallelism
   const Net* const root_net_;
   DISABLE_COPY_AND_ASSIGN(Net);
+
+  /// The boolean member variable indicates that this net is defined as nested net
+  bool is_nested_; 
 };
 
 
