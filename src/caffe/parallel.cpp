@@ -303,12 +303,13 @@ void P2PSync<Dtype>::on_start() {
     P2PSync<Dtype> *parent = queue_.pop();
     CHECK(parent == parent_);
 
-    // jhlim
+    // sync child with its parent 
     Dtype* src = parent->data_; 
     Dtype* dst = data_; 
     CUDA_CHECK(cudaMemcpyAsync(dst, src, size_ * sizeof(Dtype),  //
         cudaMemcpyDeviceToDevice, cudaStreamDefault));
     CUDA_CHECK(cudaStreamSynchronize(cudaStreamDefault));
+   
   }
 
   // Update children
@@ -332,11 +333,8 @@ void P2PSync<Dtype>::on_start() {
  
   // Move syncedmem head to HEAD_AT_GPU
   const vector<Blob<Dtype>*>& params = solver_->net()->learnable_params();
-  Dtype* mutable_gpu_data; 
   for (int i = 0; i < params.size(); ++i) {
-    mutable_gpu_data = params[i]->mutable_gpu_data();
-    mutable_gpu_data++; // added to prevent the warning message of compilers 
-                        // warning: statement has no effect [-Wunused-value]
+    params[i]->mutable_gpu_data();
   }
 #endif
 }
@@ -370,6 +368,7 @@ void P2PSync<Dtype>::on_gradients_ready() {
     CUDA_CHECK(cudaPointerGetAttributes(&attributes, dst));
     CHECK(attributes.device == device);
 #endif
+
     caffe_gpu_add(size_, src, dst, dst);
   }
 
